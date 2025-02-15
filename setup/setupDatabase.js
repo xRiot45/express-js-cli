@@ -1,11 +1,7 @@
-import chalk from 'chalk';
 import shell from 'shelljs';
 
-export const setupDatabase = (database) => {
-  console.log(chalk.yellow('\nSetting up database configuration...\n'));
-  if (database === 'MySQL') {
-    shell.exec('npm install mysql2');
-  } else {
-    shell.exec('npm install pg-promise');
-  }
+export const setupDatabase = (databaseName) => {
+  const packageName =
+    databaseName.toLowerCase() === 'mysql' ? 'mysql2' : 'pg-promise';
+  shell.exec(`npm install ${packageName}`);
 };

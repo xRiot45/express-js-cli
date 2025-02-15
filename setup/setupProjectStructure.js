@@ -1,10 +1,6 @@
-import chalk from 'chalk';
 import fs from 'fs';
-import shell from 'shelljs';
 
-export const setupProjectStructure = () => {
-  // Setup Project Structure
-  console.log(chalk.yellow('\nSetting up project structure...\n'));
+export const setupProjectStructure = (language) => {
   const folders = [
     'controllers',
     'services',
@@ -16,25 +12,27 @@ export const setupProjectStructure = () => {
     'utils',
     'validations',
   ];
+
+  // Add types folder if language is TypeScript
   if (language === 'TypeScript') {
     folders.push('types');
   }
 
+  // Create src folder
   if (!fs.existsSync('src')) {
-    shell.mkdir('src');
+    fs.mkdirSync('src');
   }
 
+  // Mapping folders to src
   folders.forEach((folder) => {
     const folderPath = `src/${folder}`;
     if (!fs.existsSync(folderPath)) {
-      shell.mkdir(folderPath);
+      fs.mkdirSync(folderPath);
     }
   });
 
-  fs.writeFileSync(`src/app.${language === 'TypeScript' ? 'ts' : 'js'}`, '');
-  fs.writeFileSync(`src/server.${language === 'TypeScript' ? 'ts' : 'js'}`, '');
-
-  console.log(chalk.blue('\nProject structure created successfully!\n'));
-
-  console.log(chalk.blue('\nProject setup completed!\n'));
+  // Create empty files (app.ts/js, server.ts/js)
+  const extension = language === 'TypeScript' ? 'ts' : 'js';
+  fs.writeFileSync(`src/app.${extension}`, '');
+  fs.writeFileSync(`src/server.${extension}`, '');
 };

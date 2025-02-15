@@ -1,8 +1,11 @@
 import fs from 'fs';
 
-export const setupGitignore = () => {
-  const gitIgnore = '.gitignore';
-  const ignoreContent = `
+export const setupGitIgnore = () => {
+  const gitignore = '.gitignore';
+  const existingIgnoreRules = fs.existsSync(gitignore)
+    ? fs.readFileSync(gitignore, 'utf8')
+    : '';
+  const ignoreRules = `
 # compiled output
 /dist
 /node_modules
@@ -56,16 +59,13 @@ pids
 *.pid
 *.seed
 *.pid.lock
-
-# Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 `;
 
-  if (!fs.existsSync(gitIgnore)) {
-    fs.writeFileSync(gitIgnore, ignoreContent.trim());
-    console.log('.gitignore created successfully');
-  } else {
-    fs.appendFileSync(gitIgnore, `\n${ignoreContent.trim()}`);
-    console.log('Added rules to .gitignore');
-  }
+  const newRules = ignoreRules.trimRight().replace(/\n+$/, '');
+  const newIgnoreRules =
+    newRules === existingIgnoreRules
+      ? existingIgnoreRules
+      : `${existingIgnoreRules}\n${newRules}`;
+
+  fs.writeFileSync(gitignore, newIgnoreRules);
 };

@@ -5,62 +5,65 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import shell from 'shelljs';
 import { setupDatabase } from './setup/setupDatabase.js';
+import { setupEnv } from './setup/setupEnv.js';
 import { setupEslint } from './setup/setupEslint.js';
 import { setupGit } from './setup/setupGit.js';
+import { setupGitIgnore } from './setup/setupGitignore.js';
 import { setupHuskyCommitlint } from './setup/setupHuskyCommitlint.js';
 import { setupLanguage } from './setup/setupLanguage.js';
 import { setupPrettier } from './setup/setupPrettier.js';
+import { setupProjectStructure } from './setup/setupProjectStructure.js';
 
 const dim = '\x1b[2m';
 const reset = '\x1b[0m';
 
-const askQuestions = async () => {
+const askProjectDetails = async () => {
   const answers = await inquirer.prompt([
     {
       type: 'input',
-      name: 'projectName',
-      message: 'Enter Project Name:',
+      name: 'name',
+      message: 'Enter project name:',
     },
     {
       type: 'list',
       name: 'language',
-      message: 'Select Language:',
+      message: 'Select language:',
       choices: ['JavaScript', 'TypeScript'],
     },
     {
       type: 'list',
       name: 'database',
-      message: 'Select Database:',
+      message: 'Select database:',
       choices: ['MySQL', 'PostgreSQL'],
     },
     {
       type: 'confirm',
-      name: 'prettier',
-      message: `Use Prettier for code formatting? ${dim}(Recommended)${reset}`,
+      name: 'usePrettier',
+      message: `Use Prettier for code formatting? ${dim}(recommended)${reset}`,
       default: true,
     },
     {
       type: 'confirm',
-      name: 'eslint',
-      message: `Use Eslint for code linting? ${dim}(Recommended)${reset}`,
+      name: 'useEslint',
+      message: ` Use Eslint for code linting? ${dim}(recommended)${reset}`,
       default: true,
     },
     {
       type: 'confirm',
-      name: 'husky',
-      message: `Use Husky & Commitlint for commit linting? ${dim}(Recommended)${reset}`,
+      name: 'useHusky',
+      message: `Use Husky and Commitlint for commit linting? ${dim}(recommended)${reset}`,
       default: true,
     },
     {
       type: 'confirm',
-      name: 'git',
-      message: `Initialize Git repository?`,
+      name: 'useGit',
+      message: 'Initialize Git repository?',
     },
     {
       type: 'input',
-      name: 'gitCommand',
+      name: 'gitRepositoryUrl',
       message: 'Enter GitHub repository URL:',
-      when: (answers) => answers.git,
+      when: (answers) => answers.useGit,
       validate: (input) =>
         /^https:\/\/github\.com\/.+\/.+\.git$/.test(input) ||
         'Enter a valid GitHub repository URL!',
@@ -72,15 +75,15 @@ const askQuestions = async () => {
 
 const createProject = async () => {
   const {
-    projectName,
+    name: projectName,
     language,
     database,
-    prettier,
-    eslint,
-    husky,
-    git,
-    gitCommand,
-  } = await askQuestions();
+    usePrettier,
+    useEslint,
+    useHusky,
+    useGit,
+    gitRepositoryUrl,
+  } = await askProjectDetails();
 
   console.log(chalk.yellow(`\nCreating project: ${projectName}...\n`));
 
@@ -90,9 +93,9 @@ const createProject = async () => {
   shell.exec('npm init -y');
 
   const packageJsonPath = 'package.json';
-  let packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
-  packageJson.name = `${projectName}`;
+  packageJson.name = projectName;
   packageJson.description = `This is a ${projectName} project`;
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
@@ -105,31 +108,16 @@ const createProject = async () => {
     'npm install --save-dev @types/express @types/cors @types/helmet @types/morgan @types/bcryptjs @types/uuid @types/http-errors nodemon',
   );
 
-  // Setup Language
+  setupProjectStructure(language);
+  setupEnv();
+  setupGitIgnore();
   setupLanguage(language);
-
-  // Setup Database
   setupDatabase(database);
 
-  // Setup Prettier
-  if (prettier) {
-    setupPrettier();
-  }
-
-  // Setup Eslint
-  if (eslint) {
-    setupEslint(language);
-  }
-
-  // Setup Husky & Commitlint
-  if (husky) {
-    setupHuskyCommitlint(language);
-  }
-
-  // Setup Git
-  if (git) {
-    setupGit();
-  }
+  if (usePrettier) setupPrettier();
+  if (useEslint) setupEslint(language);
+  if (useHusky) setupHuskyCommitlint(language);
+  if (useGit) setupGit(projectName, gitRepositoryUrl);
 
   console.log(chalk.green(`\nProject created successfully!`));
 };

@@ -7,6 +7,6 @@ export const setupPrettier = () => {
   shell.exec('npm install --save-dev prettier');
   fs.writeFileSync(
     '.prettierrc',
-    JSON.stringify({ singleQuote: true, semi: false }, null, 2),
+    JSON.stringify({ singleQuote: true, semi: true }, null, 2),
   );
 };
