@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^5.4.1",
     "inquirer": "^12.4.1",
+    "ora": "^8.2.0",
     "shelljs": "^0.8.5"
   }
 }

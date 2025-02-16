@@ -1,5 +1,5 @@
 import fs from 'fs';
-import chalk from 'chalk';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const setupEnv = (database, projectName) => {
   const environmentVariables = {
@@ -43,11 +43,10 @@ NODE_ENV=${environment}
     `;
   };
 
-  Object.entries(environmentVariables).forEach(([environment, fileName]) => {
-    const content = environmentVariableContent(environment);
-
-    fs.writeFileSync(fileName, content);
-
-    console.log(chalk.green(`Created ${fileName}`));
-  });
+  runCommandWithBuilder(() => {
+    Object.entries(environmentVariables).forEach(([environment, fileName]) => {
+      const content = environmentVariableContent(environment);
+      fs.writeFileSync(fileName, content);
+    });
+  }, 'Creating Environment Variables...');
 };

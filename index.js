@@ -13,6 +13,7 @@ import { setupHuskyAndCommitlint } from './setup/setupHuskyCommitlint.js';
 import { setupLanguage } from './setup/setupLanguage.js';
 import { setupPrettier } from './setup/setupPrettier.js';
 import { setupProjectStructure } from './setup/setupProjectStructure.js';
+import { runCommandWithBuilder } from './utils/runCommandWithBuilder.js';
 
 const dim = '\x1b[2m';
 const reset = '\x1b[0m';
@@ -90,7 +91,7 @@ const createProject = async () => {
   shell.mkdir(projectName);
   shell.cd(projectName);
 
-  shell.exec('npm init -y');
+  runCommandWithBuilder('npm init -y', 'Creating package.json...');
 
   const packageJsonPath = 'package.json';
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -100,12 +101,14 @@ const createProject = async () => {
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-  shell.exec(
+  runCommandWithBuilder(
     'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs express-validator uuid cookie-parser',
+    'Installing core dependencies...',
   );
 
-  shell.exec(
+  runCommandWithBuilder(
     'npm install --save-dev @types/express @types/cors @types/helmet @types/morgan @types/bcryptjs @types/uuid @types/http-errors nodemon',
+    'Installing development dependencies...',
   );
 
   setupProjectStructure(language);
@@ -119,7 +122,7 @@ const createProject = async () => {
   if (useHusky) setupHuskyAndCommitlint(language);
   if (useGit) setupGit(projectName, gitRepositoryUrl);
 
-  console.log(chalk.green(`\nProject created successfully!`));
+  console.log(chalk.green(`\nProject created successfully! 🎉`));
 };
 
 createProject();

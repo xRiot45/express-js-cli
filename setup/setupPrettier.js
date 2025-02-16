@@ -1,12 +1,15 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import shell from 'shelljs';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const setupPrettier = () => {
-  console.log(chalk.yellow('\nSetting up Prettier...\n'));
-  shell.exec('npm install --save-dev prettier');
-  fs.writeFileSync(
-    '.prettierrc',
-    JSON.stringify({ singleQuote: true, semi: true }, null, 2),
-  );
+  runCommandWithBuilder(() => {
+    shell.exec('npm install --save-dev prettier', { silent: true });
+
+    fs.writeFileSync(
+      '.prettierrc',
+      JSON.stringify({ singleQuote: true, semi: true }, null, 2),
+    );
+  }, 'Setting up Prettier...');
 };

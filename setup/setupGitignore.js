@@ -1,11 +1,14 @@
 import fs from 'fs';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const setupGitIgnore = () => {
-  const gitignore = '.gitignore';
-  const existingIgnoreRules = fs.existsSync(gitignore)
-    ? fs.readFileSync(gitignore, 'utf8')
-    : '';
-  const ignoreRules = `
+  runCommandWithBuilder(() => {
+    const gitignore = '.gitignore';
+    const existingIgnoreRules = fs.existsSync(gitignore)
+      ? fs.readFileSync(gitignore, 'utf8')
+      : '';
+
+    const ignoreRules = `
 # compiled output
 /dist
 /node_modules
@@ -59,13 +62,14 @@ pids
 *.pid
 *.seed
 *.pid.lock
-`;
+    `;
 
-  const newRules = ignoreRules.trimRight().replace(/\n+$/, '');
-  const newIgnoreRules =
-    newRules === existingIgnoreRules
-      ? existingIgnoreRules
-      : `${existingIgnoreRules}\n${newRules}`;
+    const newRules = ignoreRules.trimRight().replace(/\n+$/, '');
+    const newIgnoreRules =
+      newRules === existingIgnoreRules
+        ? existingIgnoreRules
+        : `${existingIgnoreRules}\n${newRules}`;
 
-  fs.writeFileSync(gitignore, newIgnoreRules);
+    fs.writeFileSync(gitignore, newIgnoreRules);
+  }, 'Setting up .gitignore...');
 };

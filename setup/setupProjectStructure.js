@@ -1,38 +1,30 @@
 import fs from 'fs';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const setupProjectStructure = (language) => {
-  const folders = [
-    'controllers',
-    'services',
-    'repositories',
-    'models',
-    'routes',
-    'configs',
-    'middlewares',
-    'utils',
-    'validations',
-  ];
+  runCommandWithBuilder(() => {
+    const folders = [
+      'controllers',
+      'services',
+      'repositories',
+      'models',
+      'routes',
+      'configs',
+      'middlewares',
+      'utils',
+      'validations',
+    ];
+    if (language === 'TypeScript') folders.push('types');
 
-  // Add types folder if language is TypeScript
-  if (language === 'TypeScript') {
-    folders.push('types');
-  }
+    if (!fs.existsSync('src')) fs.mkdirSync('src');
 
-  // Create src folder
-  if (!fs.existsSync('src')) {
-    fs.mkdirSync('src');
-  }
+    folders.forEach((folder) => {
+      const folderPath = `src/${folder}`;
+      if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath);
+    });
 
-  // Mapping folders to src
-  folders.forEach((folder) => {
-    const folderPath = `src/${folder}`;
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath);
-    }
-  });
-
-  // Create empty files (app.ts/js, server.ts/js)
-  const extension = language === 'TypeScript' ? 'ts' : 'js';
-  fs.writeFileSync(`src/app.${extension}`, '');
-  fs.writeFileSync(`src/server.${extension}`, '');
+    const extension = language === 'TypeScript' ? 'ts' : 'js';
+    fs.writeFileSync(`src/app.${extension}`, '');
+    fs.writeFileSync(`src/server.${extension}`, '');
+  }, 'Setting up project structure...');
 };

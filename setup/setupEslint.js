@@ -1,9 +1,8 @@
-import chalk from 'chalk';
 import fs from 'fs';
 import shell from 'shelljs';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const setupEslint = (language) => {
-  console.log(chalk.yellow('\nSetting up ESLint...\n'));
   const eslintDependencies = [
     'globals',
     'eslint',
@@ -24,12 +23,17 @@ export const setupEslint = (language) => {
     );
   }
 
-  shell.exec(`npm install --save-dev ${eslintDependencies.join(' ')}`);
+  runCommandWithBuilder(() => {
+    // Install dependencies silently
+    shell.exec(`npm install --save-dev ${eslintDependencies.join(' ')}`, {
+      silent: true,
+    });
 
-  const configPath = 'eslint.config.js';
+    // Setup ESLint config file
+    const configPath = 'eslint.config.js';
 
-  if (!fs.existsSync(configPath)) {
-    const tsImports = `
+    if (!fs.existsSync(configPath)) {
+      const tsImports = `
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintPluginComments from 'eslint-plugin-eslint-comments';
 import eslintPluginImport from 'eslint-plugin-import';
@@ -40,12 +44,12 @@ import globals from 'globals';
 import jsPlugin from '@eslint/js';
 import tsEslint from 'typescript-eslint';\n\n`;
 
-    const jsImports = `
+      const jsImports = `
 import globals from 'globals';
 import js from '@eslint/js';
 import jsPlugin from '@eslint/js';\n\n`;
 
-    const tsConfig = `/** @type {import('eslint').Linter.Config[]} */
+      const tsConfig = `/** @type {import('eslint').Linter.Config[]} */
 export default [
   {
     plugins: {
@@ -75,7 +79,7 @@ export default [
   ...tsEslint.configs.recommended,
 ];`;
 
-    const jsConfig = `/** @type {import('eslint').Linter.Config[]} */
+      const jsConfig = `/** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ['**/*.{js,mjs,cjs,ts}'] },
   {
@@ -102,11 +106,12 @@ export default [
   jsPlugin.configs.recommended,
 ];`;
 
-    const configContent =
-      language === 'TypeScript'
-        ? `${tsImports}${tsConfig}`
-        : `${jsImports}${jsConfig}`;
+      const configContent =
+        language === 'TypeScript'
+          ? `${tsImports}${tsConfig}`
+          : `${jsImports}${jsConfig}`;
 
-    fs.writeFileSync(configPath, configContent, 'utf8');
-  }
+      fs.writeFileSync(configPath, configContent, 'utf8');
+    }
+  }, 'Setting up ESLint...');
 };
