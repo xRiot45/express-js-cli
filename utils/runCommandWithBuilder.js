@@ -11,7 +11,9 @@ export const runCommandWithBuilder = (
   try {
     if (typeof task === 'string') {
       const result = shell.exec(task, options);
-      if (result.code !== 0) throw new Error(result.stderr);
+      if (result.code !== 0) {
+        throw new Error(result.stderr);
+      }
     } else if (typeof task === 'function') {
       task();
     } else {
@@ -20,8 +22,8 @@ export const runCommandWithBuilder = (
 
     spinner.succeed(`${message} ✅`);
   } catch (error) {
-    spinner.fail(`${message} ❌`);
-    console.error(error);
+    spinner.fail(`${message} ❌\n\n`);
+    ora(error.message).fail();
     process.exit(1);
   }
 };

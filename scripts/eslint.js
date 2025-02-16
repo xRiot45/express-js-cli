@@ -2,7 +2,7 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupEslint = (language) => {
+export const configureEslint = (language) => {
   const eslintDependencies = [
     'globals',
     'eslint',
@@ -47,7 +47,7 @@ import tsEslint from 'typescript-eslint';\n\n`;
       const jsImports = `
 import globals from 'globals';
 import js from '@eslint/js';
-import jsPlugin from '@eslint/js';\n\n`;
+import pluginJs from '@eslint/js';\n\n`;
 
       const tsConfig = `/** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -103,7 +103,7 @@ export default [
     ignores: ['node_modules/', 'dist/', 'test/', 'coverage/'],
   },
   js.configs.recommended,
-  jsPlugin.configs.recommended,
+  pluginJs.configs.recommended,
 ];`;
 
       const configContent =
@@ -113,5 +113,5 @@ export default [
 
       fs.writeFileSync(configPath, configContent, 'utf8');
     }
-  }, 'Setting up ESLint...');
+  }, 'Initializing ESLint...');
 };

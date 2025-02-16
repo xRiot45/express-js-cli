@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupGitIgnore = () => {
+export const configureGitIgnore = () => {
   runCommandWithBuilder(() => {
     const gitignore = '.gitignore';
     const existingIgnoreRules = fs.existsSync(gitignore)
@@ -71,5 +71,5 @@ pids
         : `${existingIgnoreRules}\n${newRules}`;
 
     fs.writeFileSync(gitignore, newIgnoreRules);
-  }, 'Setting up .gitignore...');
+  }, 'Initializing gitignore configurations...');
 };

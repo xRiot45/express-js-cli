@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupEnv = (database, projectName) => {
+export const configureEnvironment = (database, projectName) => {
   const environmentVariables = {
     development: '.env.development.local',
     production: '.env.production.local',
@@ -21,7 +21,7 @@ MYSQL_DATABASE=
 MYSQL_SYNCHRONIZE=
     `
         : database === 'PostgreSQL'
-        ? `
+          ? `
 # PostgreSQL
 POSTGRES_HOST=
 POSTGRES_PORT=
@@ -30,7 +30,7 @@ POSTGRES_PASSWORD=
 POSTGRES_DATABASE=
 POSTGRES_SYNCHRONIZE=
     `
-        : '';
+          : '';
 
     return `
 # Application
@@ -48,5 +48,5 @@ NODE_ENV=${environment}
       const content = environmentVariableContent(environment);
       fs.writeFileSync(fileName, content);
     });
-  }, 'Creating Environment Variables...');
+  }, 'Initializing environment variables...');
 };

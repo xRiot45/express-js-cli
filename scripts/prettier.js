@@ -1,9 +1,8 @@
-import chalk from 'chalk';
 import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupPrettier = () => {
+export const configurePrettier = () => {
   runCommandWithBuilder(() => {
     shell.exec('npm install --save-dev prettier', { silent: true });
 
@@ -11,5 +10,5 @@ export const setupPrettier = () => {
       '.prettierrc',
       JSON.stringify({ singleQuote: true, semi: true }, null, 2),
     );
-  }, 'Setting up Prettier...');
+  }, 'Initializing prettier...');
 };

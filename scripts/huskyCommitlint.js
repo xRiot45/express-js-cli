@@ -2,14 +2,12 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupHuskyAndCommitlint = (language) => {
+export const configureHuskyAndCommitlint = (language) => {
   runCommandWithBuilder(() => {
-    // 1. Initialize Git if not exists
     if (!fs.existsSync('.git')) {
       fs.mkdirSync('.git');
     }
 
-    // 2. Install Husky & Commitlint
     if (!fs.existsSync('.husky')) {
       fs.mkdirSync('.husky');
       shell.exec(
@@ -18,12 +16,10 @@ export const setupHuskyAndCommitlint = (language) => {
       );
     }
 
-    // 3. Initialize Husky
     if (!fs.existsSync('.husky/_')) {
       shell.exec('npx husky init', { silent: true });
     }
 
-    // 4. Create Commitlint Config
     const commitlintConfigPath = 'commitlint.config.js';
     if (!fs.existsSync(commitlintConfigPath)) {
       fs.writeFileSync(
@@ -32,7 +28,6 @@ export const setupHuskyAndCommitlint = (language) => {
       );
     }
 
-    // 5. Setup pre-commit hook
     const preCommitPath = '.husky/pre-commit';
     const preCommitCommand = getPreCommitCommand(language);
 
@@ -51,14 +46,12 @@ export const setupHuskyAndCommitlint = (language) => {
 
     // 6. Setup commit-msg hook
     const commitMsgPath = '.husky/commit-msg';
-    const commitMsgScript = `
-npx --no-install commitlint --edit "$1"
-`;
+    const commitMsgScript = `npx --no-install commitlint --edit "$1"`;
 
     if (!fs.existsSync(commitMsgPath)) {
       fs.writeFileSync(commitMsgPath, commitMsgScript, { mode: 0o755 });
     }
-  }, 'Installing Husky and Commitlint...');
+  }, 'Initializing husky and commitlint...');
 };
 
 const getPreCommitCommand = (language) => {

@@ -1,7 +1,7 @@
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const setupGit = (projectName, repositoryUrl) => {
+export const configureGit = (projectName, repositoryUrl) => {
   runCommandWithBuilder(() => {
     shell.exec('git init', { silent: true });
     shell.exec('git add .', { silent: true });
@@ -14,5 +14,5 @@ export const setupGit = (projectName, repositoryUrl) => {
       shell.exec(`git remote add origin ${repositoryUrl}`, { silent: true });
       shell.exec('git push -u origin main', { silent: true });
     }
-  }, 'Initializing Git repository...');
+  }, 'Initializing git repository...');
 };

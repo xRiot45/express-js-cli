@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"**/*.js\" --fix",
+    "format": "prettier --write \"**/*.js\"",
+    "prepare": "husky"
   },
   "bin": {
-    "express-cli": "./index.js"
+    "express-cli": "./bin/index.js"
   },
   "type": "module",
   "keywords": [],
@@ -18,5 +21,14 @@
     "inquirer": "^12.4.1",
     "ora": "^8.2.0",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "globals": "^15.15.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.5.1"
   }
 }
