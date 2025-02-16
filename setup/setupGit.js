@@ -3,6 +3,7 @@ import shell from 'shelljs';
 
 export const setupGit = (projectName, repositoryUrl) => {
   console.log(`${chalk.yellow('\nInitializing Git repository...\n')}`);
+  shell.exec('git init');
   shell.exec('git add .');
   shell.exec(`git commit -m "feat: setup project ${projectName}"`);
 

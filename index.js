@@ -9,7 +9,7 @@ import { setupEnv } from './setup/setupEnv.js';
 import { setupEslint } from './setup/setupEslint.js';
 import { setupGit } from './setup/setupGit.js';
 import { setupGitIgnore } from './setup/setupGitignore.js';
-import { setupHuskyCommitlint } from './setup/setupHuskyCommitlint.js';
+import { setupHuskyAndCommitlint } from './setup/setupHuskyCommitlint.js';
 import { setupLanguage } from './setup/setupLanguage.js';
 import { setupPrettier } from './setup/setupPrettier.js';
 import { setupProjectStructure } from './setup/setupProjectStructure.js';
@@ -109,14 +109,14 @@ const createProject = async () => {
   );
 
   setupProjectStructure(language);
-  setupEnv();
+  setupEnv(database, projectName);
   setupGitIgnore();
   setupLanguage(language);
   setupDatabase(database);
 
   if (usePrettier) setupPrettier();
   if (useEslint) setupEslint(language);
-  if (useHusky) setupHuskyCommitlint(language);
+  if (useHusky) setupHuskyAndCommitlint(language);
   if (useGit) setupGit(projectName, gitRepositoryUrl);
 
   console.log(chalk.green(`\nProject created successfully!`));

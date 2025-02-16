@@ -16,17 +16,17 @@ export const setupLanguage = (language) => {
       start: 'node dist/app.js',
       build: 'rm -rf dist && tsc',
       format: 'prettier --write .',
-      lint: 'eslint "src/**/*.{ts}" --fix',
+      lint: 'eslint "src/**/*.{ts,js}" --fix',
     };
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     // TODO: Add file to register ts-node
     const content = `
-    import { register } from 'node:module';
-    import { pathToFileURL } from 'node:url';
+import { register } from 'node:module';
+import { pathToFileURL } from 'node:url';
 
-    register('ts-node/esm', pathToFileURL('./'));
+register('ts-node/esm', pathToFileURL('./'));
     `;
 
     fs.writeFileSync('register-ts-node.mjs', content.trim());
@@ -65,7 +65,7 @@ export const setupLanguage = (language) => {
       dev: 'nodemon --ext js src/app.js',
       start: 'node src/app.js',
       format: 'prettier --write .',
-      lint: 'eslint "src/**/*.{js}" "test/**/*.{js}" --fix',
+      lint: 'eslint "src/**/*.{js,ts}" --fix',
     };
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
