@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
-import { schematicDirectories, templateMap } from '../constants';
+import { schematicDirectories, templateMap } from '../constants/index.js';
 
 export const generateFile = async (schematic, fileName, language) => {
   const normalizedFileName = fileName.toLowerCase();

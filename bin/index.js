@@ -125,10 +125,8 @@ const createProject = async (projectName) => {
       configureGit(projectName, details.gitRepositoryUrl);
     }
 
-    process.stdout.write('\n');
     spinner.succeed(`Project ${projectName} created successfully! 🎉`);
   } catch (error) {
-    process.stdout.write('\n');
     spinner.fail(`Failed to create project: ${error.message}`);
   }
 };
