@@ -15,6 +15,7 @@ import { configureLanguage } from '../scripts/language.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { createProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
+import { generateFile } from '../commands/generateFile.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -147,14 +148,6 @@ program
     process.stdout.write(`License: ${packageJson.license}\n\n`);
   });
 
-program
-  .command('generate <schematic> <file-name>')
-  .description('Generate a new file based on a schematic');
-
-program
-  .command('update')
-  .description('Update express-cli to the latest version');
-
 const schematics = {
   controller: 'Generate a new controller file',
   service: 'Generate a new service file',
@@ -169,6 +162,28 @@ const schematics = {
   middleware: 'Generate a new middleware file',
   util: 'Generate a new util file',
 };
+
+program
+  .command('generate <schematic> <file-name>')
+  .description('Generate a new file based on a schematic')
+  .action(async (schematic, fileName) => {
+    const { language } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'language',
+        message: 'Select language:',
+        choices: ['JavaScript', 'TypeScript'],
+      },
+    ]);
+
+    fileName = fileName.toLowerCase();
+
+    generateFile(schematic, fileName, language);
+  });
+
+program
+  .command('update')
+  .description('Update express-cli to the latest version');
 
 program.on('--help', () => {
   process.stdout.write('\nSchematics:\n');
