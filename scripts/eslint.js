@@ -24,14 +24,11 @@ export const configureEslint = (language) => {
   }
 
   runCommandWithBuilder(() => {
-    // Install dependencies silently
     shell.exec(`npm install --save-dev ${eslintDependencies.join(' ')}`, {
       silent: true,
     });
 
-    // Setup ESLint config file
     const configPath = 'eslint.config.js';
-
     if (!fs.existsSync(configPath)) {
       const tsImports = `
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';

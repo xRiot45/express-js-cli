@@ -18,6 +18,10 @@ export const createProjectDirectories = (language) => {
     folders.push('types');
   }
 
+  if (language === 'TypeScript') {
+    folders.push('interfaces');
+  }
+
   runCommandWithBuilder(() => {
     if (!fs.existsSync('src')) {
       fs.mkdirSync('src');

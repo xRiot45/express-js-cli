@@ -44,7 +44,6 @@ export const configureHuskyAndCommitlint = (language) => {
       fs.writeFileSync(preCommitPath, preCommitContent, 'utf8');
     }
 
-    // 6. Setup commit-msg hook
     const commitMsgPath = '.husky/commit-msg';
     const commitMsgScript = `npx --no-install commitlint --edit "$1"`;
 

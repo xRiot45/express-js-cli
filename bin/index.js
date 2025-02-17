@@ -5,7 +5,9 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
 import shell from 'shelljs';
-import { configureDatabase } from '../scripts/datahase.js';
+import { generateFile } from '../commands/generateFile.js';
+import { schematics } from '../constants/index.js';
+import { configureDatabase } from '../scripts/database.js';
 import { configureEnvironment } from '../scripts/environment.js';
 import { configureEslint } from '../scripts/eslint.js';
 import { configureGit } from '../scripts/git.js';
@@ -15,7 +17,6 @@ import { configureLanguage } from '../scripts/language.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { createProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
-import { generateFile } from '../commands/generateFile.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -78,6 +79,7 @@ const askProjectDetails = async (projectName) => {
 
 const createProject = async (projectName) => {
   const details = await askProjectDetails(projectName);
+  process.stdout.write('\n');
   const spinner = ora(`Creating project ${projectName}...\n\n`).start();
 
   try {
@@ -90,6 +92,8 @@ const createProject = async (projectName) => {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     packageJson.name = projectName;
     packageJson.description = `This is a ${projectName} project`;
+    packageJson.language = details.language;
+
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     runCommandWithBuilder(
@@ -121,8 +125,10 @@ const createProject = async (projectName) => {
       configureGit(projectName, details.gitRepositoryUrl);
     }
 
+    process.stdout.write('\n');
     spinner.succeed(`Project ${projectName} created successfully! 🎉`);
   } catch (error) {
+    process.stdout.write('\n');
     spinner.fail(`Failed to create project: ${error.message}`);
   }
 };
@@ -148,36 +154,28 @@ program
     process.stdout.write(`License: ${packageJson.license}\n\n`);
   });
 
-const schematics = {
-  controller: 'Generate a new controller file',
-  service: 'Generate a new service file',
-  route: 'Generate a new route file',
-  repository: 'Generate a new repository file',
-  validation: 'Generate a new validation file',
-  model: 'Generate a new model file',
-  interface: 'Generate a new interface file (if using TypeScript)',
-  types: 'Generate a new types file (if using TypeScript)',
-  resources: 'Generate a new resources file (CRUD)',
-  config: 'Generate a new config file',
-  middleware: 'Generate a new middleware file',
-  util: 'Generate a new util file',
-};
-
 program
   .command('generate <schematic> <file-name>')
   .description('Generate a new file based on a schematic')
   .action(async (schematic, fileName) => {
-    const { language } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'language',
-        message: 'Select language:',
-        choices: ['JavaScript', 'TypeScript'],
-      },
-    ]);
+    const packageJsonPath = 'package.json';
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    let language = packageJson.language;
+    if (!language) {
+      const answers = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'language',
+          message: 'Select language:',
+          choices: ['JavaScript', 'TypeScript'],
+        },
+      ]);
+
+      language = answers.language;
+    }
 
     fileName = fileName.toLowerCase();
-
     generateFile(schematic, fileName, language);
   });
 
