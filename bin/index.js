@@ -140,7 +140,7 @@ program.version(
 program
   .option('-i, --info', 'Display information about express-cli')
   .action(() => {
-    process.stdout.write(`\nName: ${packageJson.name}\n`);
+    process.stdout.write(`Name: ${packageJson.name}\n`);
     process.stdout.write(`Version: ${packageJson.version}\n`);
     process.stdout.write(`Author: ${packageJson.author}\n`);
     process.stdout.write(`Description: ${packageJson.description}\n`);
