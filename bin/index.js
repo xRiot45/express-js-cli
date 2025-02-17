@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { Command } from 'commander';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
@@ -15,16 +16,16 @@ import { configurePrettier } from '../scripts/prettier.js';
 import { createProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
+const program = new Command();
+const packageJson = JSON.parse(
+  fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+);
+
 const dim = '\x1b[2m';
 const reset = '\x1b[0m';
 
-const askProjectDetails = async () => {
+const askProjectDetails = async (projectName) => {
   const answers = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Enter project name:',
-    },
     {
       type: 'list',
       name: 'language',
@@ -71,21 +72,11 @@ const askProjectDetails = async () => {
     },
   ]);
 
-  return answers;
+  return { projectName, ...answers };
 };
 
-const createProject = async () => {
-  const {
-    name: projectName,
-    language,
-    database,
-    usePrettier,
-    useEslint,
-    useHusky,
-    useGit,
-    gitRepositoryUrl,
-  } = await askProjectDetails();
-
+const createProject = async (projectName) => {
+  const details = await askProjectDetails(projectName);
   const spinner = ora(`Creating project ${projectName}...\n\n`).start();
 
   try {
@@ -96,10 +87,8 @@ const createProject = async () => {
 
     const packageJsonPath = 'package.json';
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-
     packageJson.name = projectName;
     packageJson.description = `This is a ${projectName} project`;
-
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     runCommandWithBuilder(
@@ -112,24 +101,23 @@ const createProject = async () => {
       'Installing development dependencies...',
     );
 
-    createProjectDirectories(language);
-    configureEnvironment(database, projectName);
+    createProjectDirectories(details.language);
+    configureEnvironment(details.database, projectName);
     configureGitIgnore();
-    configureLanguage(language);
-    configureDatabase(database);
+    configureLanguage(details.language);
+    configureDatabase(details.database);
 
-    if (usePrettier) {
+    if (details.usePrettier) {
       configurePrettier();
     }
-
-    if (useEslint) {
-      configureEslint(language);
+    if (details.useEslint) {
+      configureEslint(details.language);
     }
-    if (useHusky) {
-      configureHuskyAndCommitlint(language);
+    if (details.useHusky) {
+      configureHuskyAndCommitlint(details.language);
     }
-    if (useGit) {
-      configureGit(projectName, gitRepositoryUrl);
+    if (details.useGit) {
+      configureGit(projectName, details.gitRepositoryUrl);
     }
 
     spinner.succeed(`Project ${projectName} created successfully! 🎉`);
@@ -138,4 +126,57 @@ const createProject = async () => {
   }
 };
 
-await createProject();
+program
+  .command('new <project-name>')
+  .description('Create a new Express.js API project')
+  .action(createProject);
+
+program.version(
+  packageJson.version,
+  '-v, --version',
+  'Display the current version of express-cli',
+);
+
+program
+  .option('-i, --info', 'Display information about express-cli')
+  .action(() => {
+    process.stdout.write(`\nName: ${packageJson.name}\n`);
+    process.stdout.write(`Version: ${packageJson.version}\n`);
+    process.stdout.write(`Author: ${packageJson.author}\n`);
+    process.stdout.write(`Description: ${packageJson.description}\n`);
+    process.stdout.write(`License: ${packageJson.license}\n\n`);
+  });
+
+program
+  .command('generate <schematic> <file-name>')
+  .description('Generate a new file based on a schematic');
+
+program
+  .command('update')
+  .description('Update express-cli to the latest version');
+
+const schematics = {
+  controller: 'Generate a new controller file',
+  service: 'Generate a new service file',
+  route: 'Generate a new route file',
+  repository: 'Generate a new repository file',
+  validation: 'Generate a new validation file',
+  model: 'Generate a new model file',
+  interface: 'Generate a new interface file (if using TypeScript)',
+  types: 'Generate a new types file (if using TypeScript)',
+  resources: 'Generate a new resources file (CRUD)',
+  config: 'Generate a new config file',
+  middleware: 'Generate a new middleware file',
+  util: 'Generate a new util file',
+};
+
+program.on('--help', () => {
+  process.stdout.write('\nSchematics:\n');
+  Object.keys(schematics).forEach((schematic) => {
+    process.stdout.write(
+      `  ${schematic} ${dim} \t${schematics[schematic]} ${reset}\n`,
+    );
+  });
+});
+
+program.parse(process.argv);

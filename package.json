@@ -1,6 +1,16 @@
 {
   "name": "express-cli",
   "version": "1.0.0",
+  "author": "Thomas Alberto",
+  "description": "Express CLI for creating Express.js projects",
+  "license": "ISC",
+  "keywords": [
+    "express",
+    "cli",
+    "node",
+    "javascript",
+    "typescript"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,15 +19,12 @@
     "prepare": "husky"
   },
   "bin": {
-    "express-cli": "./bin/index.js"
+    "express": "./bin/index.js"
   },
   "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "chalk": "^5.4.1",
+    "commander": "^13.1.0",
     "inquirer": "^12.4.1",
     "ora": "^8.2.0",
     "shelljs": "^0.8.5"
