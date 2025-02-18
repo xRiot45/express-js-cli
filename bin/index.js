@@ -99,7 +99,7 @@ const createProject = async (projectName) => {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     runCommandWithBuilder(
-      'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs zod uuid cookie-parser',
+      'npm install express dotenv cors helmet morgan winston express-rate-limit bcryptjs zod cookie-parser',
       `Installing core dependencies`,
     );
 
