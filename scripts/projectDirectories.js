@@ -37,5 +37,5 @@ export const createProjectDirectories = (language) => {
     const extension = language === 'TypeScript' ? 'ts' : 'js';
     fs.writeFileSync(`src/app.${extension}`, '');
     fs.writeFileSync(`src/server.${extension}`, '');
-  }, 'Initializing project directories...');
+  }, 'Initializing project directories');
 };

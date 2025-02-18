@@ -9,5 +9,5 @@ export const configureDatabase = (databaseName) => {
 
   runCommandWithBuilder(() => {
     shell.exec(`npm install ${packageName}`, { silent: true });
-  }, `Initializing database...`);
+  }, `Initializing database`);
 };

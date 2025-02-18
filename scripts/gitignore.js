@@ -71,5 +71,5 @@ pids
         : `${existingIgnoreRules}\n${newRules}`;
 
     fs.writeFileSync(gitignore, newIgnoreRules);
-  }, 'Initializing gitignore configurations...');
+  }, 'Initializing gitignore configurations');
 };

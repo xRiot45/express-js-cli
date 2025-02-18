@@ -70,5 +70,5 @@ register('ts-node/esm', pathToFileURL('./'));
 
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
-  }, `Initializing ${language}...`);
+  }, `Initializing ${language}`);
 };

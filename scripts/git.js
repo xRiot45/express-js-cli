@@ -14,5 +14,5 @@ export const configureGit = (projectName, repositoryUrl) => {
       shell.exec(`git remote add origin ${repositoryUrl}`, { silent: true });
       shell.exec('git push -u origin main', { silent: true });
     }
-  }, 'Initializing git repository...');
+  }, 'Initializing git repository');
 };

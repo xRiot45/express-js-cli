@@ -50,7 +50,7 @@ export const configureHuskyAndCommitlint = (language) => {
     if (!fs.existsSync(commitMsgPath)) {
       fs.writeFileSync(commitMsgPath, commitMsgScript, { mode: 0o755 });
     }
-  }, 'Initializing husky and commitlint...');
+  }, 'Initializing husky and commitlint');
 };
 
 const getPreCommitCommand = (language) => {

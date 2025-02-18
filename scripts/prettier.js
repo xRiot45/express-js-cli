@@ -10,5 +10,5 @@ export const configurePrettier = () => {
       '.prettierrc',
       JSON.stringify({ singleQuote: true, semi: true }, null, 2),
     );
-  }, 'Initializing prettier...');
+  }, 'Initializing prettier');
 };

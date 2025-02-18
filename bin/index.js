@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import chalk from 'chalk';
 import { Command } from 'commander';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -62,6 +63,7 @@ const askProjectDetails = async (projectName) => {
       type: 'confirm',
       name: 'useGit',
       message: 'Initialize Git repository?',
+      default: true,
     },
     {
       type: 'input',
@@ -86,7 +88,7 @@ const createProject = async (projectName) => {
     shell.mkdir(projectName);
     shell.cd(projectName);
 
-    runCommandWithBuilder('npm init -y', 'Initializing project...');
+    runCommandWithBuilder('npm init -y', `Initializing project`);
 
     const packageJsonPath = 'package.json';
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -97,13 +99,13 @@ const createProject = async (projectName) => {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     runCommandWithBuilder(
-      'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs express-validator uuid cookie-parser',
-      'Installing core dependencies...',
+      'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs zod uuid cookie-parser',
+      `Installing core dependencies`,
     );
 
     runCommandWithBuilder(
       'npm install --save-dev @types/express @types/cors @types/helmet @types/morgan @types/bcryptjs @types/uuid @types/http-errors nodemon',
-      'Installing development dependencies...',
+      `Installing development dependencies`,
     );
 
     createProjectDirectories(details.language);
@@ -125,7 +127,11 @@ const createProject = async (projectName) => {
       configureGit(projectName, details.gitRepositoryUrl);
     }
 
-    spinner.succeed(`Project ${projectName} created successfully! 🎉`);
+    spinner.succeed(
+      chalk.green(
+        'SUCCESS' + ` Project ${projectName} created successfully! 🎉`,
+      ),
+    );
   } catch (error) {
     spinner.fail(`Failed to create project: ${error.message}`);
   }

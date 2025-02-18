@@ -48,5 +48,5 @@ NODE_ENV=${environment}
       const content = environmentVariableContent(environment);
       fs.writeFileSync(fileName, content);
     });
-  }, 'Initializing environment variables...');
+  }, 'Initializing environment variables');
 };

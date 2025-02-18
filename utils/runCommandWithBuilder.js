@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import ora from 'ora';
 import shell from 'shelljs';
 
@@ -6,7 +7,11 @@ export const runCommandWithBuilder = (
   message,
   options = { silent: true },
 ) => {
-  const spinner = ora(message).start();
+  const spinner = ora({
+    text: chalk.yellow(`LOADING ${message}`),
+    color: 'yellow',
+    discardStdin: true,
+  }).start();
 
   try {
     if (typeof task === 'string') {
@@ -20,9 +25,9 @@ export const runCommandWithBuilder = (
       throw new Error('Invalid task type, expected string or function.');
     }
 
-    spinner.succeed(`${message} ✅`);
+    spinner.succeed(chalk.green(`SUCCESS ${message}`));
   } catch (error) {
-    spinner.fail(`${message} ❌\n\n`);
+    spinner.fail(chalk.red(`ERROR ${message}`));
     ora(error.message).fail();
     process.exit(1);
   }

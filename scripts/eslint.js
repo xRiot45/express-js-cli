@@ -110,5 +110,5 @@ export default [
 
       fs.writeFileSync(configPath, configContent, 'utf8');
     }
-  }, 'Initializing ESLint...');
+  }, 'Initializing ESLint');
 };
