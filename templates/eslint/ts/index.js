@@ -26,6 +26,8 @@ export default [
       'unused-imports/no-unused-imports': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
       'eslint-comments/no-unused-disable': 'warn',
       'arrow-body-style': 'off'
     },
