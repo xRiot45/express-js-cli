@@ -1,5 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import { getTemplateProjectDirectoriesJS } from '../templates/project-directories/js/index.js';
+import { getTemplateProjectDirectoriesTS } from '../templates/project-directories/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const createProjectDirectories = (language) => {
@@ -38,72 +40,8 @@ export const createProjectDirectories = (language) => {
 
     const appContent =
       language === 'TypeScript'
-        ? `
-import cors from 'cors';
-import express, { Application } from 'express';
-import { envConfig } from './configs/env.config.ts';
-import logger from './configs/logger.config.ts';
-import connectToDatabase from './configs/database.config.ts';
-
-const app: Application = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
-
-const startServer = async (): Promise<void> => {
-  try {
-    await connectToDatabase();
-    app.listen(envConfig.APP_PORT, () => {
-      logger.info(\`Server running on port \${envConfig.APP_PORT}\`);
-    });
-  } catch (error) {
-    logger.error('Failed to start server', error);
-    process.exit(1);
-  }
-};
-
-startServer();
-    `
-        : `
-import cors from 'cors';
-import express from 'express';
-import { APP_PORT } from './configs/env.config.js';
-import logger from './configs/logger.config.js';
-import connectToDatabase from './configs/database.config.js';
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
-
-const startServer = async () => {
-  try {
-    await connectToDatabase();
-    app.listen(APP_PORT, async () => {
-      logger.info(\`Server running on port \${APP_PORT}\`);
-    });
-  } catch (error) {
-    logger.error('Failed to start server', error);
-    process.exit(1);
-  }
-};
-
-startServer();
-
-    `;
+        ? getTemplateProjectDirectoriesTS()
+        : getTemplateProjectDirectoriesJS();
 
     if (!fs.existsSync(appFilePath)) {
       fs.writeFileSync(appFilePath, appContent);

@@ -1,7 +1,11 @@
-import shell from 'shelljs';
-import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import shell from 'shelljs';
+import { getTemplateDatabaseConfigJS } from '../templates/database-config/js/index.js';
+import { getTemplateDatabaseConfigTS } from '../templates/database-config/ts/index.js';
+import { getTemplateSequelizeConfigJS } from '../templates/sequelize-config/js/index.js';
+import { getTemplateSequelizeConfigTS } from '../templates/sequelize-config/ts/index.js';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const configureDatabase = (databaseName, language) => {
   const packageName =
@@ -21,67 +25,18 @@ export const configureDatabase = (databaseName, language) => {
 
   const sequelizeConfigContent =
     language === 'TypeScript'
-      ? `
-import { Sequelize } from 'sequelize';
-import { envConfig } from './env.config.ts';
-
-type SequelizeDialect = 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql';
-
-const sequelize = new Sequelize({
-  dialect: envConfig.DIALECT as SequelizeDialect,
-  host: envConfig.DATABASE_HOST,
-  port: Number(envConfig.DATABASE_PORT),
-  username: envConfig.DATABASE_USERNAME,
-  password: envConfig.DATABASE_PASSWORD,
-  database: envConfig.DATABASE_NAME,
-  logging: false,
-});
-
-export default sequelize;
-  `
-      : `
-import { Sequelize } from 'sequelize';
-import {
-  DIALECT,
-  DATABASE_HOST,
-  DATABASE_NAME,
-  DATABASE_PASSWORD,
-  DATABASE_PORT,
-  DATABASE_USERNAME,
-} from './env.config.js';
-
-const sequelize = new Sequelize({
-  dialect: DIALECT,
-  host: DATABASE_HOST,
-  port: DATABASE_PORT,
-  username: DATABASE_USERNAME,
-  password: DATABASE_PASSWORD,
-  database: DATABASE_NAME,
-  logging: false,
-});
-
-export default sequelize;
-`;
+      ? getTemplateSequelizeConfigTS()
+      : getTemplateSequelizeConfigJS();
 
   fs.writeFileSync(
     path.join(configDir, `sequelize.config.${extension}`),
     sequelizeConfigContent,
   );
 
-  const databaseConfigContent = `import logger from './logger.config.${extension}';
-import sequelize from './sequelize.config.${extension}';
-
-const connectToDatabase = async () => {
-  try {
-    await sequelize.authenticate();
-    logger.info('Connection to the database has been established successfully.');
-  } catch (error) {
-    await sequelize.close();
-    logger.error('Unable to connect to the database:', error);
-  }
-};
-
-export default connectToDatabase;`;
+  const databaseConfigContent =
+    language === 'TypeScript'
+      ? getTemplateDatabaseConfigTS()
+      : getTemplateDatabaseConfigJS();
 
   fs.writeFileSync(
     path.join(configDir, `database.config.${extension}`),

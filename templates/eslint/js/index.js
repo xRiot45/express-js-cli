@@ -1,5 +1,7 @@
-import js from '@eslint/js';
+export const getTemplateEslintJS = () => {
+  return `
 import globals from 'globals';
+import js from '@eslint/js';
 import pluginJs from '@eslint/js';
 
 /** @type {import('eslint').Linter.Config[]} */
@@ -25,7 +27,7 @@ export default [
   {
     ignores: ['node_modules/', 'dist/', 'test/', 'coverage/'],
   },
-  {
+    {
     files: ['**/*.js', '**/*.ts'],
     rules: {
       'arrow-body-style': 'off',
@@ -33,4 +35,6 @@ export default [
   },
   js.configs.recommended,
   pluginJs.configs.recommended,
-];
+];    
+`;
+};

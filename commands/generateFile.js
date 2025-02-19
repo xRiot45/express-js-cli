@@ -1,7 +1,9 @@
-import path from 'path';
-import fs from 'fs';
 import chalk from 'chalk';
-import { schematicDirectories, templateMap } from '../constants/index.js';
+import fs from 'fs';
+import path from 'path';
+import { schematicDirectories } from '../constants/index.js';
+import { getTemplateGenerateResourcesJS } from '../templates/generate-resources/js/index.js';
+import { getTemplateGenerateResourcesTS } from '../templates/generate-resources/ts/index.js';
 
 export const generateFile = async (schematic, fileName, language) => {
   const normalizedFileName = fileName.toLowerCase();
@@ -49,7 +51,11 @@ export const generateFile = async (schematic, fileName, language) => {
     return;
   }
 
-  const fileTemplate = templateMap[schematic] || '';
+  const fileTemplate =
+    language === 'TypeScript'
+      ? getTemplateGenerateResourcesTS(schematic, normalizedFileName)
+      : getTemplateGenerateResourcesJS(schematic, normalizedFileName);
+
   fs.writeFileSync(filePath, fileTemplate.trim());
   process.stdout.write(
     chalk.green('✔ SUCCESS') + `\t File generated: ${filePath}\n`,

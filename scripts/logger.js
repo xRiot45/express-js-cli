@@ -1,7 +1,9 @@
-import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import shell from 'shelljs';
+import { getTemplateLoggerJS } from '../templates/logger-config/js/index.js';
+import { getTemplateLoggerTS } from '../templates/logger-config/ts/index.js';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const configureLogger = (language) => {
   runCommandWithBuilder(() => {
@@ -15,58 +17,7 @@ export const configureLogger = (language) => {
   }
 
   const loggerConfigContent =
-    language === 'TypeScript'
-      ? `
-import winston from 'winston';
-
-const logger: winston.Logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
-  ],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-      ),
-    }),
-  );
-}
-
-export default logger;
-  `
-      : `
-import winston from 'winston';
-
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
-  ],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-      ),
-    }),
-  );
-}
-
-export default logger;
-
-  `;
+    language === 'TypeScript' ? getTemplateLoggerTS() : getTemplateLoggerJS();
 
   fs.writeFileSync(
     path.join(configDir, `logger.config.${extension}`),
