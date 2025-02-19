@@ -15,6 +15,7 @@ import { configureGit } from '../scripts/git.js';
 import { configureGitIgnore } from '../scripts/gitignore.js';
 import { configureHuskyAndCommitlint } from '../scripts/huskyCommitlint.js';
 import { configureLanguage } from '../scripts/language.js';
+import { configureLogger } from '../scripts/logger.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { createProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
@@ -56,7 +57,7 @@ const askProjectDetails = async (projectName) => {
     {
       type: 'confirm',
       name: 'useHusky',
-      message: `Use Husky and Commitlint for commit linting? ${dim}(recommended)${reset}`,
+      message: `Use Husky and Commit lint for commit linting? ${dim}(recommended)${reset}`,
       default: true,
     },
     {
@@ -99,7 +100,7 @@ const createProject = async (projectName) => {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     runCommandWithBuilder(
-      'npm install express dotenv cors helmet morgan winston express-rate-limit bcryptjs zod cookie-parser',
+      'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs zod cookie-parser',
       `Installing core dependencies`,
     );
 
@@ -109,10 +110,11 @@ const createProject = async (projectName) => {
     );
 
     createProjectDirectories(details.language);
-    configureEnvironment(details.database, projectName);
+    configureEnvironment(details.database, projectName, details.language);
     configureGitIgnore();
     configureLanguage(details.language);
-    configureDatabase(details.database);
+    configureDatabase(details.database, details.language);
+    configureLogger(details.language);
 
     if (details.usePrettier) {
       configurePrettier();
@@ -180,7 +182,7 @@ program
     }
 
     fileName = fileName.toLowerCase();
-    generateFile(schematic, fileName, language);
+    await generateFile(schematic, fileName, language);
   });
 
 program

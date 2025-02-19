@@ -60,8 +60,6 @@ export default [
     rules: {
       'prettier/prettier': 'error',
       'unused-imports/no-unused-imports': 'error',
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
       'eslint-comments/no-unused-disable': 'warn',

@@ -37,26 +37,25 @@ register('ts-node/esm', pathToFileURL('./'));
 
       // Update tsconfig.json
       const tsConfigPath = 'tsconfig.json';
+      const customTsConfig = `
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}`;
+
       if (fs.existsSync(tsConfigPath)) {
-        let tsConfig = fs.readFileSync(tsConfigPath, 'utf-8');
-
-        tsConfig = tsConfig
-          .replace(/("target":\s*)".*?"/, '$1"ESNext"')
-          .replace(/("module":\s*)".*?"/, '$1"NodeNext"')
-          .replace(
-            /\/\/\s*"moduleResolution":\s*".*?",?/g,
-            '"moduleResolution": "NodeNext",',
-          )
-          .replace(/\/\/\s*"outDir":\s*".*?",?/g, '"outDir": "./dist",');
-
-        if (!/"include": \[.*?\]/.test(tsConfig)) {
-          tsConfig = tsConfig.replace(
-            /\n\}\s*$/,
-            ',\n  "include": ["src/**/*"]\n}',
-          );
-        }
-
-        fs.writeFileSync(tsConfigPath, tsConfig);
+        fs.writeFileSync(tsConfigPath, customTsConfig, 'utf-8');
       }
     } else if (language === 'JavaScript') {
       packageJson.main = 'src/app.js';
