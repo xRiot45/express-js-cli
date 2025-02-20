@@ -25,8 +25,6 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 ## 📋 Table of Contents
 
----
-
 1. 🤖 [Introduction](#-introduction)
 2. ⚙️ [Tech Stack](#-tech-stack)
 3. 🔋 [Features](#-features)
@@ -37,8 +35,6 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 ## 🤖 Introduction
 
----
-
 **Express API CLI** is a Command Line Interface (CLI) tool designed to make it easier and faster to create **RESTful API** projects using **Express JS**. With this CLI, developers can immediately create a neat project structure, install the necessary dependencies, and configure various key features according to user preferences without having to do time-consuming manual setup.
 
 Express API CLI comes as a solution for developers who want to save time in the initialization stage of backend projects using Express.js. With support for programming language selection (JavaScript or TypeScript), database configuration (MySQL or PostgreSQL), as well as tools such as Prettier for code formatting and Husky & Commitlint for commit standardization, this CLI is designed so that developers can focus directly on developing business features without worrying about the initial technical setup.
@@ -47,15 +43,11 @@ This tool is perfect for beginners who want to start projects quickly as well as
 
 ## ⚙️ Tech Stack
 
----
-
 - **Node JS** : JavaScript runtime for the server.
 - **Express JS** : Minimalist framework for the backend.
 - **JavaScript** : Programming Language.
 
 ## 🔋 Features
-
----
 
 ✅ **Multi-Language Support** : Choose between JavaScript or TypeScript.
 
@@ -78,8 +70,6 @@ This tool is perfect for beginners who want to start projects quickly as well as
 Follow these steps to set up the project locally on your machine.
 
 ## 🤸 Quick Start
-
----
 
 **1. Prerequisites**
 
