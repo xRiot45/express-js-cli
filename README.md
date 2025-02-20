@@ -27,13 +27,13 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 ## 📋 Table of Contents
 
-1. 🤖 [Introduction](#introduction)
-2. ⚙️ [Tech Stack](#tech-stack)
-3. 🔋 [Features](#features)
-4. 🤸 [Quick Start](#quick-start)
-5. 📜 [CLI Usage](#cli-usage)
-6. 🕸️ [Snippets (Code to Copy)](#snippets)
-7. 🔗 [Links](#links)
+1. 🤖 [Introduction](#-introduction)
+2. ⚙️ [Tech Stack](#-tech-stack)
+3. 🔋 [Features](#-features)
+4. 🤸 [Quick Start](#-quick-start)
+5. 📜 [CLI Usage](#-cli-usage)
+6. 🕸️ [Snippets (Code to Copy)](#-snippets)
+7. 🔗 [Links](#-links)
 
 <br />
 
