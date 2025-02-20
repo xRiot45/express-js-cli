@@ -1,9 +1,8 @@
-<div align="center">
-  <br />
+<br />
     <!-- <a href="https://youtu.be/rOpEN1JDaD0?si=WfOjLV57WfR9x6QK" target="_blank">
       <img src="https://i.ibb.co/xtTbHkfs/Readme-Thumbnail.png" alt="Project Banner">
     </a> -->
-  <br />
+<br />
 
 <div align="center">
     <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white" alt="node.js" />
