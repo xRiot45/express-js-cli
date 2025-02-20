@@ -16,6 +16,8 @@
 Express API CLI is a Command Line Interface (CLI) tool designed to make it easier and faster to create RESTful API projects using Express JS.
 </div>
 
+<br />
+
 - **Version :** v1.0.0
 - **Developer :** Thomas Alberto
 - **Released On :** February 2025
