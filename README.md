@@ -67,9 +67,9 @@ This tool is perfect for beginners who want to start projects quickly as well as
 
 ✅ **Quick Installation** : All major and development dependencies are instantly installed.
 
-Follow these steps to set up the project locally on your machine.
-
 ## 🤸 Quick Start
+
+Follow these steps to set up the project locally on your machine
 
 **1. Prerequisites**
 
