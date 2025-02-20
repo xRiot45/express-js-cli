@@ -23,6 +23,8 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 - **Released On :** February 2025
 - **Status :** Stable Release
 
+<br />
+
 ## 📋 Table of Contents
 
 1. 🤖 [Introduction](#-introduction)
@@ -33,6 +35,8 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 6. 🕸️ [Snippets (Code to Copy)](#-snippets)
 7. 🔗 [Links](#-links)
 
+<br />
+
 ## 🤖 Introduction
 
 **Express API CLI** is a Command Line Interface (CLI) tool designed to make it easier and faster to create **RESTful API** projects using **Express JS**. With this CLI, developers can immediately create a neat project structure, install the necessary dependencies, and configure various key features according to user preferences without having to do time-consuming manual setup.
@@ -41,11 +45,15 @@ Express API CLI comes as a solution for developers who want to save time in the 
 
 This tool is perfect for beginners who want to start projects quickly as well as for development teams who want to maintain standards and consistency in their projects. With just a few simple commands, Express.js projects are ready to go with a structure that conforms to best practices.
 
+<br />
+
 ## ⚙️ Tech Stack
 
 - **Node JS** : JavaScript runtime for the server.
 - **Express JS** : Minimalist framework for the backend.
 - **JavaScript** : Programming Language.
+
+<br />
 
 ## 🔋 Features
 
@@ -66,6 +74,8 @@ This tool is perfect for beginners who want to start projects quickly as well as
 ✅ **Initialize Git Repository** : Automatically initializes the Git repository.
 
 ✅ **Quick Installation** : All major and development dependencies are instantly installed.
+
+<br />
 
 ## 🤸 Quick Start
 
@@ -112,6 +122,8 @@ $ npm run format
 $ npm run dev
 ```
 
+<br />
+
 ## 📜 CLI Usage
 
 **To view the list of available commands, use the following command**
@@ -150,11 +162,13 @@ Schematics:
   util         Generate a new util file
 ```
 
+<br />
+
 ## 🕸️ Snippets
 
 **Code Service**
 
-- Code JavaScript
+- JavaScript
 
 ```javascript
 const get = async () => {
@@ -185,7 +199,7 @@ const remove = async (id) => {
 export default { get, getById, create, update, remove };
 ```
 
-- Code TypeScript
+- TypeScript
 
 ```typescript
 import testInterface from '../interfaces/test.interface.ts';
@@ -223,7 +237,7 @@ export default { get, getById, create, update, remove };
 
 **Code Controller**
 
-- Code JavaScript
+- JavaScript
 
 ```javascript
 const get = async (req, res, next) => {
@@ -269,7 +283,7 @@ const remove = async (req, res, next) => {
 export default { get, getById, create, update, remove };
 ```
 
-- Code TypeScript
+- TypeScript
 
 ```typescript
 import { Request, Response, NextFunction } from 'express';
@@ -339,7 +353,7 @@ export default { get, getById, create, update, remove };
 
 **Code Router**
 
-- Code JavaScript
+- JavaScript
 
 ```javascript
 import { Router } from 'express';
@@ -356,7 +370,7 @@ testRouter.delete('/:id', testController.remove);
 export default testRouter;
 ```
 
-- Code TypeScript
+- TypeScript
 
 ```typescript
 import { Router } from 'express';
@@ -375,7 +389,7 @@ export default testRouter;
 
 **Code Model**
 
-- Code JavaScript & TypeScript
+- JavaScript & TypeScript
 
 ```javascript
 import sequelize from '../configs/sequelize.config.js';
@@ -389,7 +403,7 @@ export default testModel;
 
 **Code Repository**
 
-- Code JavaScript
+- JavaScript
 
 ```javascript
 import testModel from '../models/test.model.js';
@@ -414,7 +428,7 @@ const deleteData = async (id) => {
 export default { getAllData, getDataById, createData, updateData, deleteData };
 ```
 
-- Code TypeScript
+- TypeScript
 
 ```typescript
 import { Model, FindOptions } from 'sequelize';
@@ -458,7 +472,7 @@ export default { getAllData, getDataById, createData, updateData, deleteData };
 
 **Code Validation**
 
-- Code JavaScript
+- JavaScript
 
 ```javascript
 import { z } from 'zod';
@@ -470,7 +484,7 @@ const testValidation = z.object({
 export default testValidation;
 ```
 
-- Code TypeScript
+- TypeScript
 
 ```typescript
 import { z } from 'zod';
@@ -491,6 +505,8 @@ export default interface testInterface {
   // Implement your interface here
 }
 ```
+
+<br />
 
 ## 🔗 Links
 
