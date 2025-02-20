@@ -19,6 +19,7 @@ import { configureLogger } from '../scripts/logger.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { configureProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
+import centerText from '../utils/centerText.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -134,6 +135,12 @@ const createProject = async (projectName) => {
     process.stdout.write(chalk.cyan(`\n$ cd ${projectName}`));
     process.stdout.write(chalk.cyan(`\n$ npm run format`));
     process.stdout.write(chalk.cyan(`\n$ npm run dev\n`));
+
+    process.stdout.write('\n\n');
+    process.stdout.write(
+      chalk.green(centerText('Thank you for using Express CLI!')) + '\n',
+    );
+    process.stdout.write(chalk.yellow(centerText('Happy coding! 🚀')) + '\n\n');
   } catch (error) {
     spinner.fail(`Failed to create project: ${error.message}`);
   }
