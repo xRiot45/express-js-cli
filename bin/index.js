@@ -17,7 +17,7 @@ import { configureHuskyAndCommitlint } from '../scripts/huskyCommitlint.js';
 import { configureLanguage } from '../scripts/language.js';
 import { configureLogger } from '../scripts/logger.js';
 import { configurePrettier } from '../scripts/prettier.js';
-import { createProjectDirectories } from '../scripts/projectDirectories.js';
+import { configureProjectDirectories } from '../scripts/projectDirectories.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 const program = new Command();
@@ -83,13 +83,14 @@ const askProjectDetails = async (projectName) => {
 const createProject = async (projectName) => {
   const details = await askProjectDetails(projectName);
   process.stdout.write('\n');
-  const spinner = ora(`Creating project ${projectName}...\n\n`).start();
+
+  const spinner = ora(`Installation in progress... ☕`).start();
 
   try {
     shell.mkdir(projectName);
     shell.cd(projectName);
 
-    runCommandWithBuilder('npm init -y', `Initializing project`);
+    await runCommandWithBuilder('npm init -y');
 
     const packageJsonPath = 'package.json';
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -99,41 +100,40 @@ const createProject = async (projectName) => {
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-    runCommandWithBuilder(
+    await runCommandWithBuilder(
       'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs zod cookie-parser',
-      `Installing core dependencies`,
     );
 
-    runCommandWithBuilder(
+    await runCommandWithBuilder(
       'npm install --save-dev @types/express @types/cors @types/helmet @types/morgan @types/bcryptjs @types/uuid @types/http-errors nodemon',
-      `Installing development dependencies`,
     );
 
-    createProjectDirectories(details.language);
-    configureEnvironment(details.database, projectName, details.language);
-    configureGitIgnore();
-    configureLanguage(details.language);
-    configureDatabase(details.database, details.language);
-    configureLogger(details.language);
+    await configureProjectDirectories(details.language);
+    await configureEnvironment(details.database, projectName, details.language);
+    await configureGitIgnore();
+    await configureLanguage(details.language);
+    await configureDatabase(details.database, details.language);
+    await configureLogger(details.language);
 
     if (details.usePrettier) {
-      configurePrettier();
+      await configurePrettier();
     }
     if (details.useEslint) {
-      configureEslint(details.language);
+      await configureEslint(details.language);
     }
     if (details.useHusky) {
-      configureHuskyAndCommitlint(details.language);
+      await configureHuskyAndCommitlint(details.language);
     }
     if (details.useGit) {
-      configureGit(projectName, details.gitRepositoryUrl);
+      await configureGit(projectName, details.gitRepositoryUrl);
     }
 
-    spinner.succeed(
-      chalk.green(
-        'SUCCESS' + ` Project ${projectName} created successfully! 🎉`,
-      ),
-    );
+    spinner.succeed(chalk.green(`Project ${projectName} created! 🎉 `));
+
+    process.stdout.write(`\nNext steps:\n`);
+    process.stdout.write(chalk.cyan(`\n$ cd ${projectName}`));
+    process.stdout.write(chalk.cyan(`\n$ npm run format`));
+    process.stdout.write(chalk.cyan(`\n$ npm run dev\n`));
   } catch (error) {
     spinner.fail(`Failed to create project: ${error.message}`);
   }

@@ -4,7 +4,7 @@ import { getTemplateProjectDirectoriesJS } from '../templates/project-directorie
 import { getTemplateProjectDirectoriesTS } from '../templates/project-directories/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const createProjectDirectories = (language) => {
+export const configureProjectDirectories = async (language) => {
   const folders = new Set([
     'controllers',
     'services',
@@ -22,7 +22,7 @@ export const createProjectDirectories = (language) => {
     folders.add('interfaces');
   }
 
-  runCommandWithBuilder(() => {
+  await runCommandWithBuilder(() => {
     const srcPath = 'src';
     if (!fs.existsSync(srcPath)) {
       fs.mkdirSync(srcPath);
@@ -46,5 +46,5 @@ export const createProjectDirectories = (language) => {
     if (!fs.existsSync(appFilePath)) {
       fs.writeFileSync(appFilePath, appContent);
     }
-  }, 'Initializing project directories');
+  });
 };

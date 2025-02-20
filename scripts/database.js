@@ -7,15 +7,15 @@ import { getTemplateSequelizeConfigJS } from '../templates/sequelize-config/js/i
 import { getTemplateSequelizeConfigTS } from '../templates/sequelize-config/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureDatabase = (databaseName, language) => {
+export const configureDatabase = async (databaseName, language) => {
   const packageName =
     databaseName.toLowerCase() === 'mysql'
       ? 'mysql2 sequelize'
       : 'pg pg-hstore sequelize';
 
-  runCommandWithBuilder(() => {
+  await runCommandWithBuilder(() => {
     shell.exec(`npm install ${packageName}`, { silent: true });
-  }, `Initializing database`);
+  });
 
   const extension = language === 'JavaScript' ? 'js' : 'ts';
   const configDir = path.resolve('src/configs');

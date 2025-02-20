@@ -1,34 +1,38 @@
-import chalk from 'chalk';
-import ora from 'ora';
-import shell from 'shelljs';
+import { spawn } from 'child_process';
 
-export const runCommandWithBuilder = (
-  task,
-  message,
-  options = { silent: true },
-) => {
-  const spinner = ora({
-    text: chalk.yellow(`LOADING ${message}`),
-    color: 'yellow',
-    discardStdin: true,
-  }).start();
+export const runCommandWithBuilder = (command) =>
+  new Promise((resolve, reject) => {
+    if (typeof command === 'string') {
+      const [cmd, ...args] = command.split(' ');
+      const process = spawn(cmd, args, { shell: true, stdio: 'pipe' });
 
-  try {
-    if (typeof task === 'string') {
-      const result = shell.exec(task, options);
-      if (result.code !== 0) {
-        throw new Error(result.stderr);
+      process.on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(
+            new Error(`Command "${command}" failed with exit code ${code}`),
+          );
+        }
+      });
+
+      process.on('error', reject);
+    } else if (typeof command === 'function') {
+      try {
+        const result = command();
+        if (result instanceof Promise) {
+          result.then(resolve).catch(reject);
+        } else {
+          resolve(result);
+        }
+      } catch (error) {
+        reject(error);
       }
-    } else if (typeof task === 'function') {
-      task();
     } else {
-      throw new Error('Invalid task type, expected string or function.');
+      reject(
+        new Error(
+          `Invalid command type: expected string or function, but got ${typeof command}`,
+        ),
+      );
     }
-
-    spinner.succeed(chalk.green(`SUCCESS ${message}`));
-  } catch (error) {
-    spinner.fail(chalk.red(`ERROR ${message}`));
-    ora(error.message).fail();
-    process.exit(1);
-  }
-};
+  });

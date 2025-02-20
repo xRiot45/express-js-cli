@@ -4,7 +4,7 @@ import { getTemplateEslintJS } from '../templates/eslint/js/index.js';
 import { getTemplateEslintTS } from '../templates/eslint/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureEslint = (language) => {
+export const configureEslint = async (language) => {
   const eslintDependencies = [
     'globals',
     'eslint',
@@ -25,7 +25,7 @@ export const configureEslint = (language) => {
     );
   }
 
-  runCommandWithBuilder(() => {
+  await runCommandWithBuilder(() => {
     shell.exec(`npm install --save-dev ${eslintDependencies.join(' ')}`, {
       silent: true,
     });
@@ -39,5 +39,5 @@ export const configureEslint = (language) => {
 
       fs.writeFileSync(configPath, configContent, 'utf8');
     }
-  }, 'Initializing ESLint');
+  });
 };

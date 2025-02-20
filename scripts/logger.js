@@ -5,8 +5,8 @@ import { getTemplateLoggerJS } from '../templates/logger-config/js/index.js';
 import { getTemplateLoggerTS } from '../templates/logger-config/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureLogger = (language) => {
-  runCommandWithBuilder(() => {
+export const configureLogger = async (language) => {
+  await runCommandWithBuilder(() => {
     shell.exec(`npm install winston`, { silent: true });
   }, `Initializing logger`);
 

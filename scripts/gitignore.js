@@ -2,8 +2,8 @@ import fs from 'fs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 import { getTemplateGitIgnore } from '../templates/gitignore/index.js';
 
-export const configureGitIgnore = () => {
-  runCommandWithBuilder(() => {
+export const configureGitIgnore = async () => {
+  await runCommandWithBuilder(() => {
     const gitignore = '.gitignore';
     const existingIgnoreRules = fs.existsSync(gitignore)
       ? fs.readFileSync(gitignore, 'utf8')
@@ -17,5 +17,5 @@ export const configureGitIgnore = () => {
         : `${existingIgnoreRules}\n${newRules}`;
 
     fs.writeFileSync(gitignore, newIgnoreRules);
-  }, 'Initializing gitignore configurations');
+  });
 };

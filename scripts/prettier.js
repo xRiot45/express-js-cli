@@ -2,13 +2,13 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configurePrettier = () => {
-  runCommandWithBuilder(() => {
+export const configurePrettier = async () => {
+  await runCommandWithBuilder(() => {
     shell.exec('npm install --save-dev prettier', { silent: true });
 
     fs.writeFileSync(
       '.prettierrc',
       JSON.stringify({ singleQuote: true, semi: true }, null, 2),
     );
-  }, 'Initializing prettier');
+  });
 };

@@ -2,8 +2,8 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureLanguage = (language) => {
-  runCommandWithBuilder(() => {
+export const configureLanguage = async (language) => {
+  await runCommandWithBuilder(() => {
     const packageJsonPath = 'package.json';
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
@@ -69,5 +69,5 @@ register('ts-node/esm', pathToFileURL('./'));
 
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
-  }, `Initializing ${language}`);
+  });
 };

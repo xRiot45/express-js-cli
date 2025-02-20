@@ -4,7 +4,7 @@ import { getTemplateEnvironmentConfigTS } from '../templates/environment-config/
 import { getTemplateEnvironmentVariabel } from '../templates/environment-variabel/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureEnvironment = (database, projectName, language) => {
+export const configureEnvironment = async (database, projectName, language) => {
   const environmentVariables = {
     development: '.env.development.local',
     production: '.env.production.local',
@@ -14,7 +14,7 @@ export const configureEnvironment = (database, projectName, language) => {
   const environmentVariableContent = (environment) =>
     getTemplateEnvironmentVariabel(projectName, environment, database);
 
-  runCommandWithBuilder(() => {
+  await runCommandWithBuilder(() => {
     Object.entries(environmentVariables).forEach(([environment, fileName]) => {
       const content = environmentVariableContent(environment);
       fs.writeFileSync(fileName, content);
@@ -30,5 +30,5 @@ export const configureEnvironment = (database, projectName, language) => {
 
     fs.mkdirSync('src/configs', { recursive: true });
     fs.writeFileSync(envConfigPath, envConfigContent);
-  }, 'Initializing environment variables');
+  });
 };

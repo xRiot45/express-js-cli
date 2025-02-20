@@ -2,8 +2,8 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureHuskyAndCommitlint = (language) => {
-  runCommandWithBuilder(() => {
+export const configureHuskyAndCommitlint = async (language) => {
+  await runCommandWithBuilder(() => {
     if (!fs.existsSync('.git')) {
       fs.mkdirSync('.git');
     }
@@ -50,7 +50,7 @@ export const configureHuskyAndCommitlint = (language) => {
     if (!fs.existsSync(commitMsgPath)) {
       fs.writeFileSync(commitMsgPath, commitMsgScript, { mode: 0o755 });
     }
-  }, 'Initializing husky and commitlint');
+  });
 };
 
 const getPreCommitCommand = (language) => {
