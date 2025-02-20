@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="javascript" />
   </div>
 
-<h1 align="center">Express JS CLI</h1>
+<h2 align="center">Express JS CLI</h2>
 
 <div align="center">
 Express API CLI is a Command Line Interface (CLI) tool designed to make it easier and faster to create RESTful API projects using Express JS.
