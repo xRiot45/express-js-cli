@@ -127,6 +127,27 @@ ${modelName}Router.delete('/:id', ${modelName}Controller.remove);
 
 export default ${modelName}Router;
       `;
+    case 'middleware':
+      return `
+const ${modelName}Middleware = (req, res, next) => {
+  try{
+    // Implement your middleware logic here
+    next();
+  } catch(error){
+    next(error) 
+  }
+}
+
+export default ${modelName}Middleware
+  `;
+    case 'util':
+      return `
+const ${modelName}Util = () => {
+  // Implement your util logic here  
+}
+
+export default ${modelName}Util
+`;
     default:
       return '';
   }

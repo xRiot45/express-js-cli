@@ -175,6 +175,29 @@ export default interface ${modelName}Interface{
   // Implement your interface here
 }      
   `;
+    case 'middleware':
+      return `
+import { Request, Response, NextFunction } from 'express';
+
+const ${modelName}Middleware = (req: Request, res: Response, next: NextFunction): void => {
+  try {
+    // Implement your middleware logic here
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default ${modelName}Middleware;    
+`;
+    case 'util':
+      return `
+const ${modelName}Util = (): void => {
+  // Implement your util logic here  
+}
+
+export default ${modelName}Util
+`;
     default:
       return '';
   }

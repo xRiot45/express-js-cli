@@ -6,7 +6,18 @@ import { getTemplateGenerateResourcesJS } from '../templates/generate-resources/
 import { getTemplateGenerateResourcesTS } from '../templates/generate-resources/ts/index.js';
 
 export const generateFile = async (schematic, fileName, language) => {
+  const toCamelCase = (str) =>
+    str
+      .split(/[-_ ]+/)
+      .map((word, index) =>
+        index === 0
+          ? word.toLowerCase()
+          : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+      )
+      .join('');
+
   const normalizedFileName = fileName.toLowerCase();
+  const camelCaseName = toCamelCase(fileName);
 
   const extensionMap = {
     TypeScript: schematic === 'types' ? 'd.ts' : 'ts',
@@ -53,8 +64,8 @@ export const generateFile = async (schematic, fileName, language) => {
 
   const fileTemplate =
     language === 'TypeScript'
-      ? getTemplateGenerateResourcesTS(schematic, normalizedFileName)
-      : getTemplateGenerateResourcesJS(schematic, normalizedFileName);
+      ? getTemplateGenerateResourcesTS(schematic, camelCaseName)
+      : getTemplateGenerateResourcesJS(schematic, camelCaseName);
 
   fs.writeFileSync(filePath, fileTemplate.trim());
   process.stdout.write(
