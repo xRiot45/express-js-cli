@@ -2,7 +2,7 @@
   "name": "express-cli",
   "version": "1.0.0",
   "author": "Thomas Alberto",
-  "description": "Express CLI for creating Express.js projects",
+  "description": "Express API CLI is a Command Line Interface (CLI) tool designed to make it easier and faster to create RESTful API projects using Express JS.",
   "license": "ISC",
   "keywords": [
     "express",
