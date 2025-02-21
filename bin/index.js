@@ -30,58 +30,72 @@ const dim = '\x1b[2m';
 const reset = '\x1b[0m';
 
 const askProjectDetails = async (projectName) => {
-  const answers = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'language',
-      message: 'Select language:',
-      choices: ['JavaScript', 'TypeScript'],
-    },
-    {
-      type: 'list',
-      name: 'database',
-      message: 'Select database:',
-      choices: ['MySQL', 'PostgreSQL'],
-    },
-    {
-      type: 'confirm',
-      name: 'usePrettier',
-      message: `Use Prettier for code formatting? ${dim}(recommended)${reset}`,
-      default: true,
-    },
-    {
-      type: 'confirm',
-      name: 'useEslint',
-      message: `Use Eslint for code linting? ${dim}(recommended)${reset}`,
-      default: true,
-    },
-    {
-      type: 'confirm',
-      name: 'useHusky',
-      message: `Use Husky and Commit lint for commit linting? ${dim}(recommended)${reset}`,
-      default: true,
-    },
-    {
-      type: 'confirm',
-      name: 'useGit',
-      message: 'Initialize Git repository?',
-      default: true,
-    },
-    {
-      type: 'input',
-      name: 'gitRepositoryUrl',
-      message: 'Enter GitHub repository URL:',
-      when: (answers) => answers.useGit,
-      validate: (input) =>
-        /^https:\/\/github\.com\/.+\/.+\.git$/.test(input) ||
-        'Enter a valid GitHub repository URL!',
-    },
-  ]);
+  try {
+    const answers = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'language',
+        message: 'Select language:',
+        choices: ['JavaScript', 'TypeScript'],
+      },
+      {
+        type: 'list',
+        name: 'database',
+        message: 'Select database:',
+        choices: ['MySQL', 'PostgreSQL'],
+      },
+      {
+        type: 'confirm',
+        name: 'usePrettier',
+        message: 'Use Prettier for code formatting? (recommended)',
+        default: true,
+      },
+      {
+        type: 'confirm',
+        name: 'useEslint',
+        message: 'Use Eslint for code linting? (recommended)',
+        default: true,
+      },
+      {
+        type: 'confirm',
+        name: 'useHusky',
+        message: 'Use Husky and Commit lint for commit linting? (recommended)',
+        default: true,
+      },
+      {
+        type: 'confirm',
+        name: 'useGit',
+        message: 'Initialize Git repository?',
+        default: true,
+      },
+      {
+        type: 'input',
+        name: 'gitRepositoryUrl',
+        message: 'Enter GitHub repository URL:',
+        when: (answers) => answers.useGit,
+        validate: (input) =>
+          /^https:\/\/github\.com\/.+\/.+\.git$/.test(input) ||
+          'Enter a valid GitHub repository URL!',
+      },
+    ]);
 
-  return { projectName, ...answers };
+    return { projectName, ...answers };
+  } catch (error) {
+    if (error.isTtyError) {
+      process.stdout.write('Prompt cannot be displayed on this terminal.');
+    } else {
+      process.stdout.write('\nProgram is stopped by user\n');
+    }
+    process.exit(0);
+  }
 };
 
 const createProject = async (projectName) => {
+  if (fs.existsSync(projectName)) {
+    process.stdout.write(chalk.red('✖ ERROR : Project already exists') + `\n`);
+    process.exit(1);
+  }
+
   const details = await askProjectDetails(projectName);
   process.stdout.write('\n');
 
