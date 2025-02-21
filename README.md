@@ -496,6 +496,66 @@ type testType = z.infer<typeof testValidation>;
 export { testValidation, testType };
 ```
 
+**Code Middleware**
+
+- JavaScript
+
+```javascript
+const testMiddleware = (req, res, next) => {
+  try {
+    // Implement your middleware logic here
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default testMiddleware;
+```
+
+- TypeScript
+
+```typescript
+import { Request, Response, NextFunction } from 'express';
+
+const testMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  try {
+    // Implement your middleware logic here
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default testMiddleware;
+```
+
+**Code Util**
+
+- JavaScript
+
+```javascript
+const testUtil = () => {
+  // Implement your util logic here
+};
+
+export default testUtil;
+```
+
+- TypeScript
+
+```typescript
+const testUtil = (): void => {
+  // Implement your util logic here
+};
+
+export default testUtil;
+```
+
 **Code Interface (Only using TypeScript)**
 
 ```typescript
