@@ -90,7 +90,7 @@ Make sure you have the following installed on your machine:
 **2. Instalation**
 
 ```bash
-$ npm install -g express-cli
+$ npm i express-api-cli-tool
 ```
 
 **3. Create new project**
