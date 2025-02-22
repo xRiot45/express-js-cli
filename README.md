@@ -1,5 +1,5 @@
 <br />
-  <img src="./assets/express-cli.gif" alt="Gif">
+  <img src="![Image](https://github.com/user-attachments/assets/bed20e6f-18b1-40c5-a3b7-4de2a9f1a4dc)" alt="Gif">
 <br />
 
 <div align="center">
