@@ -1,5 +1,5 @@
-<br />
-  <img src="![Image](https://github.com/user-attachments/assets/8a41d03d-1d59-4720-bd1e-ec5643ac960d)" alt="Gif">
+![Image](https://github.com/user-attachments/assets/8a41d03d-1d59-4720-bd1e-ec5643ac960d)
+
 <br />
 
 <div align="center">
