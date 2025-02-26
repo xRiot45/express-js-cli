@@ -214,13 +214,13 @@ program
     const spinner = ora('Checking for updates...☕').start();
     const command = `npm install -g ${packageJson.name}`;
 
-    spinner.text = `Running ${command}...`;
+    spinner.text = 'Express JS CLI is updating....';
 
     exec(command, (error) => {
       if (error) {
-        spinner.fail('Failed to update Express CLI ❌');
+        spinner.fail('Failed to update Express JS CLI ❌');
       } else {
-        spinner.succeed('Express CLI successfully updated! 🚀');
+        spinner.succeed('Express JS CLI successfully updated! 🚀');
       }
     });
   });
