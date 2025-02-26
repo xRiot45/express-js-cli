@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
+import { exec } from 'child_process';
 import { Command } from 'commander';
 import fs from 'fs';
 import inquirer from 'inquirer';
@@ -18,8 +19,8 @@ import { configureLanguage } from '../scripts/language.js';
 import { configureLogger } from '../scripts/logger.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { configureProjectDirectories } from '../scripts/projectDirectories.js';
-import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 import centerText from '../utils/centerText.js';
+import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -208,7 +209,21 @@ program
 
 program
   .command('update')
-  .description('Update express-cli to the latest version');
+  .description('Update express-cli to the latest version')
+  .action(() => {
+    const spinner = ora('Checking for updates...☕').start();
+    const command = `npm install -g ${packageJson.name}`;
+
+    spinner.text = `Running ${command}...`;
+
+    exec(command, (error) => {
+      if (error) {
+        spinner.fail('Failed to update Express CLI ❌');
+      } else {
+        spinner.succeed('Express CLI successfully updated! 🚀');
+      }
+    });
+  });
 
 program.on('--help', () => {
   process.stdout.write('\nSchematics:\n');
