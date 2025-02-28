@@ -33,16 +33,32 @@ const installDependencies = (dependencies) => {
   });
 };
 
-export const configureUnitTesting = async (language, unitTesting) => {
+const createFolderTesting = () => {
+  const testDirs = ['test', 'test/e2e', 'test/integration', 'test/unit'];
+  testDirs.forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+};
+
+export const configureTesting = async (language, testing) => {
   await runCommandWithBuilder(async () => {
-    if (language === 'JavaScript') {
-      const testConfigs = {
+    const testConfigs = {
+      JavaScript: {
         Jest: {
           scripts: {
-            test: 'jest -i',
+            test: 'npm run test:unit && npm run test:integration && npm run test:e2e',
+            'test:cov': 'jest --coverage',
+            'test:e2e': 'jest --config ./test/e2e/jest-e2e.json',
+            'test:integration':
+              'jest --config ./test/integration/jest-integration.json',
+            'test:unit': 'jest --config ./test/unit/jest-unit.json',
           },
           jest: {
-            transform: { '^.+\\.[t|j]sx?$': 'babel-jest' },
+            transform: {
+              '^.+\\.[t|j]sx?$': 'babel-jest',
+            },
           },
           dependencies: [
             'jest',
@@ -68,24 +84,16 @@ export const configureUnitTesting = async (language, unitTesting) => {
             '@types/supertest',
           ],
         },
-      };
-
-      const config = testConfigs[unitTesting];
-      if (!config) {
-        return;
-      }
-
-      updatePackageJson({
-        scripts: config.scripts,
-        ...(config.jest && { jest: config.jest }),
-      });
-      installDependencies(config.dependencies);
-      createBabelConfig();
-    } else if (language === 'TypeScript') {
-      const testConfigs = {
+      },
+      TypeScript: {
         Jest: {
           scripts: {
-            test: 'jest -i',
+            test: 'npm run test:unit && npm run test:integration && npm run test:e2e',
+            'test:cov': 'jest --coverage',
+            'test:e2e': 'jest --config ./test/e2e/jest-e2e.json',
+            'test:integration':
+              'jest --config ./test/integration/jest-integration.json',
+            'test:unit': 'jest --config ./test/unit/jest-unit.json',
           },
           jest: {
             transform: {
@@ -122,19 +130,20 @@ export const configureUnitTesting = async (language, unitTesting) => {
             '@types/mocha',
           ],
         },
-      };
+      },
+    };
 
-      const config = testConfigs[unitTesting];
-      if (!config) {
-        return;
-      }
-
-      updatePackageJson({
-        scripts: config.scripts,
-        ...(config.jest && { jest: config.jest }),
-      });
-      installDependencies(config.dependencies);
-      createBabelConfig(language);
+    const config = testConfigs[language]?.[testing];
+    if (!config) {
+      return;
     }
+
+    updatePackageJson({
+      scripts: config.scripts,
+      ...(config.jest && { jest: config.jest }),
+    });
+    installDependencies(config.dependencies);
+    createBabelConfig(language);
+    createFolderTesting();
   });
 };

@@ -19,7 +19,7 @@ import { configureLanguage } from '../scripts/language.js';
 import { configureLogger } from '../scripts/logger.js';
 import { configurePrettier } from '../scripts/prettier.js';
 import { configureProjectDirectories } from '../scripts/projectDirectories.js';
-import { configureUnitTesting } from '../scripts/unitTesting.js';
+import { configureTesting } from '../scripts/testing.js';
 import centerText from '../utils/centerText.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
@@ -48,8 +48,8 @@ const askProjectDetails = async (projectName) => {
       },
       {
         type: 'list',
-        name: 'unitTesting',
-        message: 'Select unit testing:',
+        name: 'testing',
+        message: 'Select testing:',
         choices: ['Jest', 'Mocha'],
       },
       {
@@ -137,7 +137,7 @@ const createProject = async (projectName) => {
     await configureLanguage(details.language);
     await configureDatabase(details.database, details.language);
     await configureLogger(details.language);
-    await configureUnitTesting(details.language, details.unitTesting);
+    await configureTesting(details.language, details.testing);
 
     if (details.usePrettier) {
       await configurePrettier();
