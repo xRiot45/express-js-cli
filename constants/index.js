@@ -7,10 +7,12 @@ const schematics = {
   model: 'Generate a new model file',
   interface: 'Generate a new interface file (if using TypeScript)',
   types: 'Generate a new types file (if using TypeScript)',
-  resources: 'Generate a new resources file (CRUD)',
+  resources:
+    'Generate a new resources file (controller, service, route, repository, validation, model, test, interface (If using typescript))',
   config: 'Generate a new config file',
   middleware: 'Generate a new middleware file',
   util: 'Generate a new util file',
+  test: 'Generate a new test file',
 };
 
 const schematicDirectories = {
@@ -26,6 +28,7 @@ const schematicDirectories = {
   resources: 'resources',
   middleware: 'middlewares',
   util: 'utils',
+  test: 'test',
 };
 
 const templateMap = {
@@ -39,6 +42,43 @@ const templateMap = {
   interface: '// This is interface code',
   utils: '// This is utils code',
   types: '// This is types code',
+  test: '// This is test code',
 };
 
-export { schematics, schematicDirectories, templateMap };
+const dependencies = [
+  'express',
+  'dotenv',
+  'cors',
+  'helmet',
+  'morgan',
+  'express-rate-limit',
+  'bcryptjs',
+  'zod',
+  'cookie-parser',
+  'compression',
+  'helmet',
+  'http-errors',
+  'xss-clean',
+];
+
+const devDependencies = [
+  '@types/express',
+  '@types/cors',
+  '@types/helmet',
+  '@types/morgan',
+  '@types/bcryptjs',
+  '@types/http-errors',
+  'nodemon',
+  '@types/cookie-parser',
+  '@types/compression',
+  '@types/helmet',
+  '@types/http-errors',
+];
+
+export {
+  schematics,
+  schematicDirectories,
+  templateMap,
+  dependencies,
+  devDependencies,
+};

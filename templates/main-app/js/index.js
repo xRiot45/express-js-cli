@@ -1,4 +1,4 @@
-export const getTemplateProjectDirectoriesJS = () => {
+export const getTemplateMainAppJS = () => {
   return `
 import cors from 'cors';
 import express from 'express';
@@ -31,5 +31,6 @@ const startServer = async () => {
 
 startServer();
 
+export default app;
     `;
 };

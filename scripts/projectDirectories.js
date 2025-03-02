@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { getTemplateProjectDirectoriesJS } from '../templates/project-directories/js/index.js';
-import { getTemplateProjectDirectoriesTS } from '../templates/project-directories/ts/index.js';
+import { getTemplateMainAppJS } from '../templates/main-app/js/index.js';
+import { getTemplateMainAppTS } from '../templates/main-app/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 export const configureProjectDirectories = async (language) => {
@@ -40,8 +40,8 @@ export const configureProjectDirectories = async (language) => {
 
     const appContent =
       language === 'TypeScript'
-        ? getTemplateProjectDirectoriesTS()
-        : getTemplateProjectDirectoriesJS();
+        ? getTemplateMainAppTS()
+        : getTemplateMainAppJS();
 
     if (!fs.existsSync(appFilePath)) {
       fs.writeFileSync(appFilePath, appContent);

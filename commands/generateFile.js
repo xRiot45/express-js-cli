@@ -5,7 +5,7 @@ import { schematicDirectories } from '../constants/index.js';
 import { getTemplateGenerateResourcesJS } from '../templates/generate-resources/js/index.js';
 import { getTemplateGenerateResourcesTS } from '../templates/generate-resources/ts/index.js';
 
-export const generateFile = async (schematic, fileName, language) => {
+export const generateFile = async (schematic, fileName, language, testing) => {
   const toCamelCase = (str) =>
     str
       .split(/[-_ ]+/)
@@ -27,7 +27,7 @@ export const generateFile = async (schematic, fileName, language) => {
   const fileExtension = extensionMap[language] || 'js';
 
   if (schematic === 'resources') {
-    await generateResourceFiles(normalizedFileName, language);
+    await generateResourceFiles(normalizedFileName, language, testing);
     return;
   }
 
@@ -39,7 +39,10 @@ export const generateFile = async (schematic, fileName, language) => {
     return;
   }
 
-  const directory = schematicDirectories[schematic];
+  const directory =
+    schematic === 'test'
+      ? 'test'
+      : path.join('src', schematicDirectories[schematic]);
   if (!directory) {
     process.stdout.write(
       chalk.red('✖ ERROR') + `\t\t Invalid schematic: ${schematic}\n`,
@@ -48,12 +51,13 @@ export const generateFile = async (schematic, fileName, language) => {
   }
 
   const filePath = path.join(
-    'src',
     directory,
     schematic === 'types'
       ? `${normalizedFileName}.${fileExtension}`
       : `${normalizedFileName}.${schematic}.${fileExtension}`,
   );
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
 
   if (fs.existsSync(filePath)) {
     process.stdout.write(
@@ -64,8 +68,8 @@ export const generateFile = async (schematic, fileName, language) => {
 
   const fileTemplate =
     language === 'TypeScript'
-      ? getTemplateGenerateResourcesTS(schematic, camelCaseName)
-      : getTemplateGenerateResourcesJS(schematic, camelCaseName);
+      ? getTemplateGenerateResourcesTS(schematic, camelCaseName, testing)
+      : getTemplateGenerateResourcesJS(schematic, camelCaseName, testing);
 
   fs.writeFileSync(filePath, fileTemplate.trim());
   process.stdout.write(
@@ -73,7 +77,7 @@ export const generateFile = async (schematic, fileName, language) => {
   );
 };
 
-const generateResourceFiles = async (resourceName, language) => {
+const generateResourceFiles = async (resourceName, language, testing) => {
   const schematics = [
     'controller',
     'service',
@@ -87,7 +91,9 @@ const generateResourceFiles = async (resourceName, language) => {
     schematics.push('interface');
   }
 
+  schematics.push('test');
+
   for (const schematic of schematics) {
-    await generateFile(schematic, resourceName, language);
+    await generateFile(schematic, resourceName, language, testing);
   }
 };

@@ -34,12 +34,7 @@ const installDependencies = (dependencies) => {
 };
 
 const createFolderTesting = () => {
-  const testDirs = ['test', 'test/e2e', 'test/integration', 'test/unit'];
-  testDirs.forEach((dir) => {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-  });
+  fs.mkdirSync('test', { recursive: true });
 };
 
 export const configureTesting = async (language, testing) => {
@@ -48,12 +43,8 @@ export const configureTesting = async (language, testing) => {
       JavaScript: {
         Jest: {
           scripts: {
-            test: 'npm run test:unit && npm run test:integration && npm run test:e2e',
-            'test:cov': 'jest --coverage',
-            'test:e2e': 'jest --config ./test/e2e/jest-e2e.json',
-            'test:integration':
-              'jest --config ./test/integration/jest-integration.json',
-            'test:unit': 'jest --config ./test/unit/jest-unit.json',
+            test: 'jest --detectOpenHandles --forceExit',
+            'test:cov': 'jest --detectOpenHandles --coverage --forceExit',
           },
           jest: {
             transform: {
@@ -71,7 +62,9 @@ export const configureTesting = async (language, testing) => {
         },
         Mocha: {
           scripts: {
-            test: "mocha --require @babel/register 'test/**/*.test.js'",
+            test: "mocha --require @babel/register 'test/*.test.js' --exit",
+            'test:cov':
+              'nyc --all --reporter=html --reporter=text mocha --exit',
           },
           dependencies: [
             'chai',
@@ -82,18 +75,15 @@ export const configureTesting = async (language, testing) => {
             '@babel/register',
             'supertest',
             '@types/supertest',
+            'nyc',
           ],
         },
       },
       TypeScript: {
         Jest: {
           scripts: {
-            test: 'npm run test:unit && npm run test:integration && npm run test:e2e',
-            'test:cov': 'jest --coverage',
-            'test:e2e': 'jest --config ./test/e2e/jest-e2e.json',
-            'test:integration':
-              'jest --config ./test/integration/jest-integration.json',
-            'test:unit': 'jest --config ./test/unit/jest-unit.json',
+            test: 'jest --detectOpenHandles --forceExit',
+            'test:cov': 'jest --detectOpenHandles --coverage --forceExit',
           },
           jest: {
             transform: {
@@ -113,7 +103,8 @@ export const configureTesting = async (language, testing) => {
         },
         Mocha: {
           scripts: {
-            test: "mocha --require @babel/register 'test/**/*.test.ts'",
+            test: 'mocha --import=tsx test/*.test.ts --exit',
+            'test:cov': 'nyc mocha --import=tsx test/*.test.ts --exit',
           },
           dependencies: [
             'mocha',
@@ -128,6 +119,8 @@ export const configureTesting = async (language, testing) => {
             '@types/chai',
             '@types/chai-http',
             '@types/mocha',
+            'nyc',
+            'tsx',
           ],
         },
       },

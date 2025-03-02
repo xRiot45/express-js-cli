@@ -1,4 +1,4 @@
-export const getTemplateProjectDirectoriesTS = () => {
+export const getTemplateMainAppTS = () => {
   return `
 import cors from 'cors';
 import express, { Application } from 'express';
@@ -31,5 +31,7 @@ const startServer = async (): Promise<void> => {
 };
 
 startServer();
+
+export default app;
     `;
 };

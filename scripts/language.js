@@ -11,7 +11,7 @@ export const configureLanguage = async (language) => {
       packageJson.main = 'src/app.ts';
       packageJson.type = 'module';
       packageJson.scripts = {
-        dev: "nodemon --exec 'node --import ./register-ts-node.mjs' src/app.ts",
+        dev: "nodemon --exec 'tsx src/app.ts'",
         start: 'node dist/app.js',
         build: 'rm -rf dist && tsc',
         format: 'prettier --write .',
@@ -19,15 +19,6 @@ export const configureLanguage = async (language) => {
       };
 
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-
-      // Add file to register ts-node
-      const content = `
-import { register } from 'node:module';
-import { pathToFileURL } from 'node:url';
-
-register('ts-node/esm', pathToFileURL('./'));
-      `;
-      fs.writeFileSync('register-ts-node.mjs', content.trim());
 
       // Install dependencies for TypeScript
       shell.exec('npm install --save-dev typescript ts-node @types/node', {

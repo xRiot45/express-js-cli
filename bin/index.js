@@ -8,7 +8,11 @@ import inquirer from 'inquirer';
 import ora from 'ora';
 import shell from 'shelljs';
 import { generateFile } from '../commands/generateFile.js';
-import { schematics } from '../constants/index.js';
+import {
+  dependencies,
+  devDependencies,
+  schematics,
+} from '../constants/index.js';
 import { configureDatabase } from '../scripts/database.js';
 import { configureEnvironment } from '../scripts/environment.js';
 import { configureEslint } from '../scripts/eslint.js';
@@ -120,15 +124,14 @@ const createProject = async (projectName) => {
     packageJson.name = projectName;
     packageJson.description = `This is a ${projectName} project`;
     packageJson.language = details.language;
+    packageJson.testing = details.testing;
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-    await runCommandWithBuilder(
-      'npm install express dotenv cors helmet morgan express-rate-limit bcryptjs zod cookie-parser',
-    );
+    await runCommandWithBuilder(`npm install ${dependencies.join(' ')}`);
 
     await runCommandWithBuilder(
-      'npm install --save-dev @types/express @types/cors @types/helmet @types/morgan @types/bcryptjs @types/http-errors nodemon',
+      `npm install --save-dev ${devDependencies.join(' ')}`,
     );
 
     await configureProjectDirectories(details.language);
@@ -198,6 +201,7 @@ program
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
     let language = packageJson.language;
+    let testing = packageJson.testing;
     if (!language) {
       const answers = await inquirer.prompt([
         {
@@ -211,8 +215,21 @@ program
       language = answers.language;
     }
 
+    if (!testing) {
+      const answers = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'testing',
+          message: 'Select testing:',
+          choices: ['Jest', 'Mocha'],
+        },
+      ]);
+
+      testing = answers.testing;
+    }
+
     fileName = fileName.toLowerCase();
-    await generateFile(schematic, fileName, language);
+    await generateFile(schematic, fileName, language, testing);
   });
 
 program
