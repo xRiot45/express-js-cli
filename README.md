@@ -32,6 +32,7 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 5. 📜 [CLI Usage](#-cli-usage)
 6. 🕸️ [Snippets](#-snippets)
 7. 🔗 [Links](#-links)
+8. 💰 [Donate](#-donate)
 
 <br />
 
@@ -570,6 +571,8 @@ export default interface testInterface {
 
 **Code Test With Jest and Supertest**
 
+- JavaScript
+
 ```javascript
 import request from 'supertest';
 import app from '../src/app.js';
@@ -826,6 +829,8 @@ describe('Testing Your API With Jest and Supertest', () => {
   });
 });
 ```
+
+- TypeScript
 
 ```typescript
 import request from 'supertest';
@@ -1085,6 +1090,8 @@ describe('Testing Your API With Jest and Supertest', () => {
 ```
 
 **Code Test With Mocha and Chai**
+
+- JavaScript
 
 ```javascript
 import app from '../src/app.js';
@@ -1369,6 +1376,8 @@ describe('Testing Your API With Mocha and Chai', () => {
   });
 });
 ```
+
+- TypeScript
 
 ```typescript
 import app from '../src/app.ts';
