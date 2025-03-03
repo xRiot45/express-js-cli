@@ -6,7 +6,7 @@
     <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white" alt="node.js" />
     <img src="https://img.shields.io/badge/express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="express.js" />
     <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="javascript" />
-  </div>
+</div>
 
 <h2 align="center">Express JS CLI</h2>
 
@@ -16,7 +16,7 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 <br />
 
-- **Version :** v1.0.0
+- **Version :** v1.2.0
 - **Developer :** Thomas Alberto
 - **Released On :** February 2025
 - **Status :** Stable Release
@@ -73,6 +73,8 @@ This tool is perfect for beginners who want to start projects quickly as well as
 
 ✅ **Quick Installation** : All major and development dependencies are instantly installed.
 
+✅ **Testing Support** : Choose between Jest & Supertest or Mocha & Chai Framework Testing
+
 <br />
 
 ## 🤸 Quick Start
@@ -101,8 +103,9 @@ $ express new <project-name>
 
 **4. Follow the instructions**
 
-- **Choose Language** : JavaScript / TypeScript
-- **Choose Database** : MySQL / PostgreSQL
+- **Select language** : JavaScript / TypeScript
+- **Select database** : MySQL / PostgreSQL
+- **Select testing** : Jest / Mocha
 - **Use Eslint for code linting?** : Y / n
 - **Use Husky and Commit lint for commit linting?** : Y / n
 - **Initialize Git repository?** : Y / n
@@ -158,6 +161,7 @@ Schematics:
   config       Generate a new config file
   middleware   Generate a new middleware file
   util         Generate a new util file
+  test         Generate a new test file
 ```
 
 <br />
@@ -408,17 +412,17 @@ import testModel from '../models/test.model.js';
 
 const getAllData = async () => await testModel.findAll();
 
-const getDataById = async (id) => await testModel.findByPk(id);
+const getDataById = async (id) => await testModel.findOne({ where: id });
 
 const createData = async (data) => await testModel.create(data);
 
 const updateData = async (id, data) => {
   await testModel.update(data, { where: { id } });
-  return await testModel.findByPk(id);
+  return await testModel.findOne({ where: id });
 };
 
 const deleteData = async (id) => {
-  const data = await testModel.findByPk(id);
+  const data = await testModel.findOne({ where: id });
   await testModel.destroy({ where: { id } });
   return data;
 };
@@ -440,7 +444,7 @@ const getAllData = async (): Promise<Model<testInterface>[]> => {
 const getDataById = async (
   id: number,
 ): Promise<Model<testInterface> | null> => {
-  return await testModel.findByPk(id);
+  return await testModel.findOne({ where: id });
 };
 
 const createData = async (
@@ -454,11 +458,11 @@ const updateData = async (
   data: Partial<testInterface>,
 ): Promise<Model<testInterface> | null> => {
   await testModel.update(data, { where: { id } });
-  return await testModel.findByPk(id);
+  return await testModel.findOne({ where: id });
 };
 
 const deleteData = async (id: number): Promise<Model<testInterface> | null> => {
-  const data = await testModel.findByPk(id);
+  const data = await testModel.findOne({ where: id });
   if (data) {
     await testModel.destroy({ where: { id } });
   }
@@ -564,6 +568,1092 @@ export default interface testInterface {
 }
 ```
 
+**Code Test With Jest and Supertest**
+
+```javascript
+import request from 'supertest';
+import app from '../src/app.js';
+
+const validToken = 'Bearer valid.token';
+const invalidToken = 'Bearer invalid.token';
+let testId;
+
+describe('Testing Your API With Jest and Supertest', () => {
+  beforeEach(async () => {
+    const res = await request(app)
+      .post('/api/v1/test')
+      .set('Authorization', validToken)
+      .send({
+        // Send your request body in here
+      });
+
+    testId = res.body.id;
+  });
+
+  afterEach(async () => {
+    await request(app)
+      .delete(`/api/v1/test/${testId}`)
+      .set('Authorization', validToken);
+  });
+
+  describe('POST /api/v1/test - API for creating data', () => {
+    it('should return 201 if token is valid and request is valid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('id');
+    });
+
+    it('should return 400 if request is invalid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).post('/api/v1/test').send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).toEqual(409);
+    });
+  });
+
+  describe('GET /api/v1/test - API for get data', () => {
+    it('should return 200 if token is valid', async () => {
+      const res = await request(app)
+        .get('/api/v1/test')
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+      expect(Array.isArray(res.body)).toBeTruthy();
+    });
+
+    it('should return 401 if token not found', async () => {
+      const res = await request(app).get('/api/v1/test');
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .get('/api/v1/test')
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+  });
+
+  describe('GET /api/v1/test/:id - API for get data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('id', authId);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).get(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is not found', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+
+  describe('PUT /api/v1/test/:id - API for update data by id', () => {
+    it('should return 200 if token is valid, ID is valid and request is valid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data for update
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('id', authId);
+    });
+
+    it('should return 400 if token is valid, ID is valid but request is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).put(`/api/v1/test/${testId}`).send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(404);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      // Pertama, buat data yang sama sekali
+      await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      // Kemudian coba update dengan data yang sama
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).toEqual(409);
+    });
+  });
+
+  describe('DELETE /api/v1/test/:id - API for delete data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).delete(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+});
+```
+
+```typescript
+import request from 'supertest';
+import app from '../src/app.ts';
+
+const validToken: string = 'Bearer valid.token';
+const invalidToken: string = 'Bearer invalid.token';
+let testId: number;
+
+describe('Testing Your API With Jest and Supertest', () => {
+  beforeEach(async () => {
+    const res = await request(app)
+      .post('/api/v1/test')
+      .set('Authorization', validToken)
+      .send({
+        // Send your request body in here
+      });
+
+    testId = res.body.id;
+  });
+
+  afterEach(async () => {
+    await request(app)
+      .delete(`/api/v1/test/${testId}`)
+      .set('Authorization', validToken);
+  });
+
+  describe('POST /api/v1/test - API for creating data', () => {
+    it('should return 201 if token is valid and request is valid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('id');
+    });
+
+    it('should return 400 if request is invalid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).post('/api/v1/test').send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      const res = await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).toEqual(409);
+    });
+  });
+
+  describe('GET /api/v1/test - API for get data', () => {
+    it('should return 200 if token is valid', async () => {
+      const res = await request(app)
+        .get('/api/v1/test')
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+      expect(Array.isArray(res.body)).toBeTruthy();
+    });
+
+    it('should return 401 if token not found', async () => {
+      const res = await request(app).get('/api/v1/test');
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .get('/api/v1/test')
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+  });
+
+  describe('GET /api/v1/test/:id - API for get data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('id', authId);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).get(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is not found', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+
+  describe('PUT /api/v1/test/:id - API for update data by id', () => {
+    it('should return 200 if token is valid, ID is valid and request is valid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data for update
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('id', authId);
+    });
+
+    it('should return 400 if token is valid, ID is valid but request is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).put(`/api/v1/test/${testId}`).send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).toEqual(404);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      // Pertama, buat data yang sama sekali
+      await request(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      // Kemudian coba update dengan data yang sama
+      const res = await request(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).toEqual(409);
+    });
+  });
+
+  describe('DELETE /api/v1/test/:id - API for delete data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(200);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request(app).delete(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).toEqual(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+});
+```
+
+**Code Test With Mocha and Chai**
+
+```javascript
+import app from '../src/app.js';
+import { use, expect } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+
+use(chaiHttp);
+
+const validToken = 'Bearer valid.token';
+const invalidToken = 'Bearer invalid.token';
+let testId;
+
+describe('Testing Your API With Mocha and Chai', () => {
+  beforeEach(async () => {
+    const res = await request
+      .execute(app)
+      .post('/api/v1/test')
+      .set('Authorization', validToken)
+      .send({
+        // Send your request body in here
+      });
+
+    testId = res.body.id;
+  });
+
+  afterEach(async () => {
+    await request
+      .execute(app)
+      .delete(`/api/v1/test/${testId}`)
+      .set('Authorization', validToken);
+  });
+
+  describe('POST /api/v1/test - API for creating data', () => {
+    it('should return 201 if token is valid and request is valid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(201);
+      expect(res.body).haveOwnProperty('id');
+    });
+
+    it('should return 400 if request is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).equal(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).post('/api/v1/test').send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).equal(409);
+    });
+  });
+
+  describe('GET /api/v1/test - API for get data', () => {
+    it('should return 200 if token is valid', async () => {
+      const res = await request
+        .execute(app)
+        .get('/api/v1/test')
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+      expect(Array.isArray(res.body)).to.be.true;
+    });
+
+    it('should return 401 if token not found', async () => {
+      const res = await request.execute(app).get('/api/v1/test');
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .get('/api/v1/test')
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+  });
+
+  describe('GET /api/v1/test/:id - API for get data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+      expect(res.body).haveOwnProperty('id', testId);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).get(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is not found', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(404);
+    });
+  });
+
+  describe('PUT /api/v1/test/:id - API for update data by id', () => {
+    it('should return 200 if token is valid, ID is valid and request is valid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data for update
+        });
+
+      expect(res.statusCode).equal(200);
+      expect(res.body).haveOwnProperty('id', testId);
+    });
+
+    it('should return 400 if token is valid, ID is valid but request is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).equal(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(404);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      // Pertama, buat data yang sama sekali
+      await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      // Kemudian coba update dengan data yang sama
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).equal(409);
+    });
+  });
+
+  describe('DELETE /api/v1/test/:id - API for delete data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).delete(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(404);
+    });
+  });
+});
+```
+
+```typescript
+import app from '../src/app.ts';
+import { use, expect } from 'chai';
+import { default as chaiHttp, request } from 'chai-http';
+
+use(chaiHttp);
+
+const validToken: string = 'Bearer valid.token';
+const invalidToken: string = 'Bearer invalid.token';
+let testId: number;
+
+describe('Testing Your API With Mocha and Chai', () => {
+  beforeEach(async () => {
+    const res = await request
+      .execute(app)
+      .post('/api/v1/test')
+      .set('Authorization', validToken)
+      .send({
+        // Send your request body in here
+      });
+
+    testId = res.body.id;
+  });
+
+  afterEach(async () => {
+    await request
+      .execute(app)
+      .delete(`/api/v1/test/${testId}`)
+      .set('Authorization', validToken);
+  });
+
+  describe('POST /api/v1/test - API for creating data', () => {
+    it('should return 201 if token is valid and request is valid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(201);
+      expect(res.body).haveOwnProperty('id');
+    });
+
+    it('should return 400 if request is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).equal(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).post('/api/v1/test').send({
+        // Fill in with valid data
+      });
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      const res = await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).equal(409);
+    });
+  });
+
+  describe('GET /api/v1/test - API for get data', () => {
+    it('should return 200 if token is valid', async () => {
+      const res = await request
+        .execute(app)
+        .get('/api/v1/test')
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+      expect(Array.isArray(res.body)).to.be.true;
+    });
+
+    it('should return 401 if token not found', async () => {
+      const res = await request.execute(app).get('/api/v1/test');
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .get('/api/v1/test')
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+  });
+
+  describe('GET /api/v1/test/:id - API for get data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+      expect(res.body).haveOwnProperty('id', testId);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).get(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is not found', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request
+        .execute(app)
+        .get(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(404);
+    });
+  });
+
+  describe('PUT /api/v1/test/:id - API for update data by id', () => {
+    it('should return 200 if token is valid, ID is valid and request is valid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data for update
+        });
+
+      expect(res.statusCode).equal(200);
+      expect(res.body).haveOwnProperty('id', testId);
+    });
+
+    it('should return 400 if token is valid, ID is valid but request is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with invalid data
+        });
+
+      expect(res.statusCode).equal(400);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      expect(res.statusCode).equal(404);
+    });
+
+    it('should return 409 if data already exists', async () => {
+      // Pertama, buat data yang sama sekali
+      await request
+        .execute(app)
+        .post('/api/v1/test')
+        .set('Authorization', validToken)
+        .send({
+          // Fill in with valid data
+        });
+
+      // Kemudian coba update dengan data yang sama
+      const res = await request
+        .execute(app)
+        .put(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken)
+        .send({
+          // Fill with the same data
+        });
+
+      expect(res.statusCode).equal(409);
+    });
+  });
+
+  describe('DELETE /api/v1/test/:id - API for delete data by id', () => {
+    it('should return 200 if token is valid and ID is valid', async () => {
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(200);
+    });
+
+    it('should return 401 if token is not found', async () => {
+      const res = await request.execute(app).delete(`/api/v1/test/${testId}`);
+
+      expect(res.statusCode).equal(401);
+    });
+
+    it('should return 403 if token is invalid', async () => {
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', invalidToken);
+
+      expect(res.statusCode).equal(403);
+    });
+
+    it('should return 404 if ID is invalid', async () => {
+      const nonExistentId = 'non_existent_id';
+      const res = await request
+        .execute(app)
+        .delete(`/api/v1/test/${testId}`)
+        .set('Authorization', validToken);
+
+      expect(res.statusCode).equal(404);
+    });
+  });
+});
+```
+
 <br />
 
 ## 🔗 Links
@@ -578,3 +1668,14 @@ export default interface testInterface {
 - [ESLint](https://eslint.org/)
 - [Husky](https://typicode.github.io/husky/)
 - [Commitlint](https://commitlint.js.org/)
+
+## 💰 Donate
+
+Support My Work 💙
+
+Hi there! If you find this tool useful and it helps you in your work, consider supporting me with a small donation. Your support is completely optional, but it would mean a lot and help me continue improving this tool.
+
+Thank you for using this Express CLI! 😊
+Happy coding! 🚀
+
+[Link Donate](https://saweria.co/thomasalberto)

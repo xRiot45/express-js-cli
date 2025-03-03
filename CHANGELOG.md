@@ -9,4 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `update` command feature to update the version of Express CLI
+- Added `update` command feature to update the version of Express CLI.
+
+## [1.2.0] - 2025-03-03
+
+### Added
+
+- Added test features using Jest & Supertest and Mocha & Chai frameworks.
+- Added `test` command to regenerate testing files automatically.
