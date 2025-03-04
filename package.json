@@ -5,6 +5,11 @@
   "description": "Express API CLI is a Command Line Interface (CLI) tool designed to make it easier and faster to create RESTful API projects using Express JS.",
   "license": "ISC",
   "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xRiot45/express-cli"
+  },
+  "homepage": "https://github.com/xRiot45/express-cli/blob/main/README.md",
   "keywords": [
     "express",
     "cli",
