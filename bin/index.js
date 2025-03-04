@@ -198,34 +198,44 @@ program
   .description('Generate a new file based on a schematic')
   .action(async (schematic, fileName) => {
     const packageJsonPath = 'package.json';
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    let packageJson = {};
 
-    let language = packageJson.language;
-    let testing = packageJson.testing;
-    if (!language) {
-      const answers = await inquirer.prompt([
-        {
-          type: 'list',
-          name: 'language',
-          message: 'Select language:',
-          choices: ['JavaScript', 'TypeScript'],
-        },
-      ]);
-
-      language = answers.language;
+    if (fs.existsSync(packageJsonPath)) {
+      packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     }
 
-    if (!testing) {
+    let { language, testing } = packageJson;
+
+    if (!language || !testing) {
       const answers = await inquirer.prompt([
-        {
-          type: 'list',
-          name: 'testing',
-          message: 'Select testing:',
-          choices: ['Jest', 'Mocha'],
-        },
+        ...(!language
+          ? [
+              {
+                type: 'list',
+                name: 'language',
+                message: 'Select language:',
+                choices: ['JavaScript', 'TypeScript'],
+              },
+            ]
+          : []),
+        ...(!testing
+          ? [
+              {
+                type: 'list',
+                name: 'testing',
+                message: 'Select testing:',
+                choices: ['Jest', 'Mocha'],
+              },
+            ]
+          : []),
       ]);
 
-      testing = answers.testing;
+      language = language || answers.language;
+      testing = testing || answers.testing;
+
+      packageJson.language = language;
+      packageJson.testing = testing;
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 
     fileName = fileName.toLowerCase();
