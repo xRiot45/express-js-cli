@@ -16,7 +16,7 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 <br />
 
-- **Version :** v1.2.0
+- **Version :** v1.2.4
 - **Developer :** Thomas Alberto
 - **Released On :** February 2025
 - **Status :** Stable Release
