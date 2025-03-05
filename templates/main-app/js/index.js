@@ -17,6 +17,10 @@ app.use(
   }),
 );
 
+app.get('/', (req, res) => {
+  res.send('Thank you for using Express JS CLI!');
+});
+
 const startServer = async () => {
   try {
     await connectToDatabase();

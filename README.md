@@ -124,6 +124,22 @@ $ npm run format
 $ npm run dev
 ```
 
+**6 Verify the Setup**
+
+To ensure the server is running properly, open a browser and access:
+
+```
+http://localhost:3000
+```
+
+Or run the following command in the terminal:
+
+```bash
+$ curl http://localhost:3000
+```
+
+If the server is running properly, you will see a response from your server.
+
 <br />
 
 ## 📜 CLI Usage

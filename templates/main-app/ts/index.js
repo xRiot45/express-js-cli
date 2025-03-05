@@ -1,7 +1,7 @@
 export const getTemplateMainAppTS = () => {
   return `
 import cors from 'cors';
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import { envConfig } from './configs/env.config.ts';
 import logger from './configs/logger.config.ts';
 import connectToDatabase from './configs/database.config.ts';
@@ -17,6 +17,10 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Thank you for using Express JS CLI!');
+});
 
 const startServer = async (): Promise<void> => {
   try {

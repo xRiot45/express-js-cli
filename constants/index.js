@@ -73,6 +73,7 @@ const devDependencies = [
   '@types/compression',
   '@types/helmet',
   '@types/http-errors',
+  'tsx',
 ];
 
 export {
