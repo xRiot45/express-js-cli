@@ -190,7 +190,16 @@ program
     process.stdout.write(`Version: ${packageJson.version}\n`);
     process.stdout.write(`Author: ${packageJson.author}\n`);
     process.stdout.write(`Description: ${packageJson.description}\n`);
-    process.stdout.write(`License: ${packageJson.license}\n\n`);
+    process.stdout.write(`License: ${packageJson.license}\n`);
+    process.stdout.write(
+      `Github:` + chalk.cyan(` https://github.com/xRiot45/express-cli\n`),
+    );
+    process.stdout.write(
+      `Homepage:` + chalk.cyan(` https://express-js-cli.vercel.app/\n`),
+    );
+    process.stdout.write(
+      `Fund me:` + chalk.cyan(` https://github.com/sponsors/xRiot45\n\n`),
+    );
   });
 
 program

@@ -16,10 +16,11 @@ Express API CLI is a Command Line Interface (CLI) tool designed to make it easie
 
 <br />
 
-- **Version :** v1.2.4
+- **Version :** v1.2.5
 - **Developer :** Thomas Alberto
 - **Released On :** February 2025
 - **Status :** Stable Release
+- **License :** ISC License
 
 <br />
 
@@ -1693,6 +1694,8 @@ describe('Testing Your API With Mocha and Chai', () => {
 - [ESLint](https://eslint.org/)
 - [Husky](https://typicode.github.io/husky/)
 - [Commitlint](https://commitlint.js.org/)
+
+<br />
 
 ## 💰 Donate
 

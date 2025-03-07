@@ -9,7 +9,11 @@
     "type": "git",
     "url": "https://github.com/xRiot45/express-cli"
   },
-  "homepage": "https://github.com/xRiot45/express-cli",
+  "homepage": "https://express-js-cli.vercel.app/",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/xRiot45"
+  },
   "keywords": [
     "express",
     "cli",
