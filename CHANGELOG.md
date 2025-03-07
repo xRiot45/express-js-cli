@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `SECURITY.md` with details on how to report security issues.
 
+---
+
 ## [v1.2.4] - 2025-03-05
 
 ### 🚀 Release Highlights
