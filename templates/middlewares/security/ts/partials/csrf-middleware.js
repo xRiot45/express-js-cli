@@ -10,7 +10,7 @@ interface RequestWithCsrf extends Request {
 }
 
 // Middleware untuk generate token CSRF
-export const generateCsrfToken = (req: RequestWithCsrf, res: Response, next: NextFunction): void => {
+const generateCsrfToken = (req: RequestWithCsrf, res: Response, next: NextFunction): void => {
   let secret = req.cookies?._csrf_secret;
   
   if (!secret) {
@@ -26,7 +26,7 @@ export const generateCsrfToken = (req: RequestWithCsrf, res: Response, next: Nex
 };
 
 // Middleware untuk validasi token CSRF
-export const verifyCsrfToken = (req: Request, res: Response, next: NextFunction): void => {
+const verifyCsrfToken = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.headers["x-csrf-token"] as string | undefined || req.body._csrf;
   const secret = req.cookies?._csrf_secret;
 
@@ -37,6 +37,8 @@ export const verifyCsrfToken = (req: Request, res: Response, next: NextFunction)
 
   next();
 };
+
+export default { generateCsrfToken, verifyCsrfToken }
 `;
 };
 

@@ -2,7 +2,7 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureLanguage = async (language) => {
+const configureLanguage = async (language) => {
   await runCommandWithBuilder(() => {
     const packageJsonPath = 'package.json';
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -62,3 +62,5 @@ export const configureLanguage = async (language) => {
     }
   });
 };
+
+export default configureLanguage;

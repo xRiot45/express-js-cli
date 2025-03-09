@@ -1,4 +1,4 @@
-export const getTemplateEnvironmentVariabel = (
+const templateCodeEnvironmentVariable = (
   projectName,
   environment,
   database,
@@ -19,3 +19,5 @@ DATABASE_PASSWORD=
 DATABASE_NAME=
 `;
 };
+
+export default templateCodeEnvironmentVariable;

@@ -1,5 +1,7 @@
 const templateCodeCompressionMiddlewareJS = () => {
   return `
+import compression from 'compression';
+
 const compressionMiddleware = compression({
   level: 6,
   threshold: 1024,

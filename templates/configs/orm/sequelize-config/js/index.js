@@ -1,4 +1,4 @@
-export const getTemplateSequelizeConfigJS = () => {
+const templateCodeSequelizeConfigJS = () => {
   return `
 import { Sequelize } from 'sequelize';
 import {
@@ -23,3 +23,5 @@ const sequelize = new Sequelize({
 export default sequelize;
 `;
 };
+
+export default templateCodeSequelizeConfigJS;

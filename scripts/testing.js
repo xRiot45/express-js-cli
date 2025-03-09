@@ -37,7 +37,7 @@ const createFolderTesting = () => {
   fs.mkdirSync('test', { recursive: true });
 };
 
-export const configureTesting = async (language, testing) => {
+const configureTesting = async (language, testing) => {
   await runCommandWithBuilder(async () => {
     const testConfigs = {
       JavaScript: {
@@ -140,3 +140,5 @@ export const configureTesting = async (language, testing) => {
     createFolderTesting();
   });
 };
+
+export default configureTesting;

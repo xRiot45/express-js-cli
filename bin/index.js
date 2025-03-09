@@ -7,26 +7,27 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
 import shell from 'shelljs';
-import { generateFile } from '../commands/generateFile.js';
+import generateFile from '../commands/generateFile.js';
 import {
   dependencies,
   devDependencies,
   schematics,
 } from '../constants/index.js';
-import { configureDatabase } from '../scripts/database.js';
-import { configureEnvironment } from '../scripts/environment.js';
-import { configureEslint } from '../scripts/eslint.js';
-import { configureGit } from '../scripts/git.js';
-import { configureGitIgnore } from '../scripts/gitignore.js';
-import { configureHuskyAndCommitlint } from '../scripts/huskyCommitlint.js';
-import { configureLanguage } from '../scripts/language.js';
-import { configureLogger } from '../scripts/logger.js';
-import { configurePrettier } from '../scripts/prettier.js';
-import { configureProjectDirectories } from '../scripts/projectDirectories.js';
-import { configureTesting } from '../scripts/testing.js';
+import configureDatabase from '../scripts/database.js';
+import configureEnvironment from '../scripts/environment.js';
+import configureEslint from '../scripts/eslint.js';
+import configureExpressConfig from '../scripts/express.js';
+import configureGit from '../scripts/git.js';
+import configureGitIgnore from '../scripts/gitignore.js';
+import configureHuskyAndCommitlint from '../scripts/huskyCommitlint.js';
+import configureLanguage from '../scripts/language.js';
+import configureLogger from '../scripts/logger.js';
+import configureMiddlewares from '../scripts/middlewares.js';
+import configurePrettier from '../scripts/prettier.js';
+import configureProjectDirectories from '../scripts/projectDirectories.js';
+import configureTesting from '../scripts/testing.js';
 import centerText from '../utils/centerText.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
-import { configureMiddlewares } from '../scripts/middlewares.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -143,6 +144,7 @@ const createProject = async (projectName) => {
     await configureLogger(details.language);
     await configureTesting(details.language, details.testing);
     await configureMiddlewares(details.language);
+    await configureExpressConfig(details.language);
 
     if (details.usePrettier) {
       await configurePrettier();

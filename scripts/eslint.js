@@ -4,7 +4,7 @@ import { getTemplateEslintJS } from '../templates/eslint/js/index.js';
 import { getTemplateEslintTS } from '../templates/eslint/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureEslint = async (language) => {
+const configureEslint = async (language) => {
   const eslintDependencies = [
     'globals',
     'eslint',
@@ -41,3 +41,5 @@ export const configureEslint = async (language) => {
     }
   });
 };
+
+export default configureEslint;

@@ -1,4 +1,4 @@
-export const getTemplateEnvironmentConfigJS = () => {
+const templateCodeEnvironmentConfigJS = () => {
   return `
 import { config } from 'dotenv';
 import fs from 'fs';
@@ -25,3 +25,5 @@ export const {
 } = process.env;
       `;
 };
+
+export default templateCodeEnvironmentConfigJS;

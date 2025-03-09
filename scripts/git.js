@@ -1,7 +1,7 @@
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureGit = async (projectName, repositoryUrl) => {
+const configureGit = async (projectName, repositoryUrl) => {
   await runCommandWithBuilder(() => {
     shell.exec('git init', { silent: true });
     shell.exec('git add .', { silent: true });
@@ -16,3 +16,5 @@ export const configureGit = async (projectName, repositoryUrl) => {
     }
   });
 };
+
+export default configureGit;

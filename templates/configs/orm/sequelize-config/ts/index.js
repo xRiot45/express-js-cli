@@ -1,4 +1,4 @@
-export const getTemplateSequelizeConfigTS = () => {
+const templateCodeSequelizeConfigTS = () => {
   return `
 import { Sequelize } from 'sequelize';
 import { envConfig } from './env.config.ts';
@@ -18,3 +18,5 @@ const sequelize = new Sequelize({
 export default sequelize;
   `;
 };
+
+export default templateCodeSequelizeConfigTS;

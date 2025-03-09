@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { getTemplateMainAppJS } from '../templates/main-app/js/index.js';
-import { getTemplateMainAppTS } from '../templates/main-app/ts/index.js';
+import templateCodeMainAppJS from '../templates/main-app/js/index.js';
+import templateCodeMainAppTS from '../templates/main-app/ts/index.js';
+import templateCodeServerJS from '../templates/server/js/index.js';
+import templateCodeServerTS from '../templates/server/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureProjectDirectories = async (language) => {
+const configureProjectDirectories = async (language) => {
   const folders = new Set([
     'controllers',
     'services',
@@ -37,14 +39,23 @@ export const configureProjectDirectories = async (language) => {
 
     const extension = language === 'TypeScript' ? 'ts' : 'js';
     const appFilePath = path.join(srcPath, `app.${extension}`);
+    const serverFilePath = path.join(srcPath, `server.${extension}`);
+
+    const serverContent =
+      language === 'TypeScript'
+        ? templateCodeServerTS()
+        : templateCodeServerJS();
 
     const appContent =
       language === 'TypeScript'
-        ? getTemplateMainAppTS()
-        : getTemplateMainAppJS();
+        ? templateCodeMainAppTS()
+        : templateCodeMainAppJS();
 
-    if (!fs.existsSync(appFilePath)) {
+    if (!fs.existsSync(appFilePath && serverFilePath)) {
+      fs.writeFileSync(serverFilePath, serverContent);
       fs.writeFileSync(appFilePath, appContent);
     }
   });
 };
+
+export default configureProjectDirectories;

@@ -1,15 +1,21 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
+// Security Middleware
 import {
-  templateCodeCsrfMiddlewareTS,
-  templateCodeCorsMiddlewareTS,
-  templateCodeRateLimiterMiddlewareTS,
-} from '../templates/middlewares/security/ts/index.js';
-import {
-  templateCodeCsrfMiddlewareJS,
   templateCodeCorsMiddlewareJS,
+  templateCodeCsrfMiddlewareJS,
   templateCodeRateLimiterMiddlewareJS,
+  templateCodeXssMiddlewareJS,
 } from '../templates/middlewares/security/js/index.js';
+import {
+  templateCodeCorsMiddlewareTS,
+  templateCodeCsrfMiddlewareTS,
+  templateCodeRateLimiterMiddlewareTS,
+  templateCodeXssMiddlewareTS,
+} from '../templates/middlewares/security/ts/index.js';
+
+// Other Middleware
 import {
   templateCodeCompressionMiddlewareJS,
   templateCodeErrorMiddlewareJS,
@@ -25,22 +31,24 @@ const middlewareTemplates = {
   TypeScript: {
     cors: templateCodeCorsMiddlewareTS,
     csrf: templateCodeCsrfMiddlewareTS,
-    rateLimiter: templateCodeRateLimiterMiddlewareTS,
+    limiter: templateCodeRateLimiterMiddlewareTS,
     error: templateCodeErrorMiddlewareTS,
     morgan: templateCodeMorganMiddlewareTS,
     compression: templateCodeCompressionMiddlewareTS,
+    xss: templateCodeXssMiddlewareTS,
   },
   JavaScript: {
     cors: templateCodeCorsMiddlewareJS,
     csrf: templateCodeCsrfMiddlewareJS,
-    rateLimiter: templateCodeRateLimiterMiddlewareJS,
+    limiter: templateCodeRateLimiterMiddlewareJS,
     error: templateCodeErrorMiddlewareJS,
     morgan: templateCodeMorganMiddlewareJS,
     compression: templateCodeCompressionMiddlewareJS,
+    xss: templateCodeXssMiddlewareJS,
   },
 };
 
-export const configureMiddlewares = async (language) => {
+const configureMiddlewares = async (language) => {
   const fileExtension = language === 'JavaScript' ? 'js' : 'ts';
   const middlewareDirectory = path.resolve('src/middlewares');
 
@@ -50,18 +58,36 @@ export const configureMiddlewares = async (language) => {
 
   const middlewares = [
     { name: 'cors', filename: `cors.middleware.${fileExtension}` },
-    { name: 'rateLimiter', filename: `limiter.middleware.${fileExtension}` },
+    { name: 'csrf', filename: `csrf.middleware.${fileExtension}` },
+    { name: 'limiter', filename: `limiter.middleware.${fileExtension}` },
     { name: 'error', filename: `error.middleware.${fileExtension}` },
     { name: 'morgan', filename: `morgan.middleware.${fileExtension}` },
     {
       name: 'compression',
       filename: `compression.middleware.${fileExtension}`,
     },
+    { name: 'xss', filename: `xss.middleware.${fileExtension}` },
   ];
+
+  const imports = [];
+  const exports = [];
 
   middlewares.forEach(({ name, filename }) => {
     const filePath = path.join(middlewareDirectory, filename);
     const content = middlewareTemplates[language][name]();
     fs.writeFileSync(filePath, content, 'utf-8');
+
+    const importName = `${name}Middleware`;
+    imports.push(`import ${importName} from './${filename}';`);
+    exports.push(`${importName},`);
+
+    const indexContent = `${imports.join('\n')}\n\nexport {\n${exports.join('\n')}\n};\n`;
+    fs.writeFileSync(
+      path.join(middlewareDirectory, `index.${fileExtension}`),
+      indexContent,
+      'utf-8',
+    );
   });
 };
+
+export default configureMiddlewares;

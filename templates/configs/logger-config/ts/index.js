@@ -1,4 +1,4 @@
-export const getTemplateLoggerTS = () => {
+const templateCodeLoggerTS = () => {
   return `
 import winston from 'winston';
 
@@ -25,3 +25,5 @@ if (process.env.NODE_ENV !== 'production') {
 export default logger;
   `;
 };
+
+export default templateCodeLoggerTS;

@@ -1,10 +1,10 @@
 import fs from 'fs';
-import { getTemplateEnvironmentConfigJS } from '../templates/environment-config/js/index.js';
-import { getTemplateEnvironmentConfigTS } from '../templates/environment-config/ts/index.js';
-import { getTemplateEnvironmentVariabel } from '../templates/environment-variabel/index.js';
+import templateCodeEnvironmentConfigJS from '../templates/configs/environment-config/js/index.js';
+import templateCodeEnvironmentConfigTS from '../templates/configs/environment-config/ts/index.js';
+import templateCodeEnvironmentVariable from '../templates/environment-variabel/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureEnvironment = async (database, projectName, language) => {
+const configureEnvironment = async (database, projectName, language) => {
   const environmentVariables = {
     development: '.env.development.local',
     production: '.env.production.local',
@@ -12,7 +12,7 @@ export const configureEnvironment = async (database, projectName, language) => {
   };
 
   const environmentVariableContent = (environment) =>
-    getTemplateEnvironmentVariabel(projectName, environment, database);
+    templateCodeEnvironmentVariable(projectName, environment, database);
 
   await runCommandWithBuilder(() => {
     Object.entries(environmentVariables).forEach(([environment, fileName]) => {
@@ -25,10 +25,12 @@ export const configureEnvironment = async (database, projectName, language) => {
 
     const envConfigContent =
       language === 'TypeScript'
-        ? getTemplateEnvironmentConfigTS()
-        : getTemplateEnvironmentConfigJS();
+        ? templateCodeEnvironmentConfigTS()
+        : templateCodeEnvironmentConfigJS();
 
     fs.mkdirSync('src/configs', { recursive: true });
     fs.writeFileSync(envConfigPath, envConfigContent);
   });
 };
+
+export default configureEnvironment;

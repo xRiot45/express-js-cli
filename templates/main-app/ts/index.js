@@ -1,41 +1,10 @@
-export const getTemplateMainAppTS = () => {
+const templateCodeMainAppTS = () => {
   return `
-import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
-import { envConfig } from './configs/env.config.ts';
-import logger from './configs/logger.config.ts';
-import connectToDatabase from './configs/database.config.ts';
+import configureExpress from './configs/express.config.ts';
 
-const app: Application = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Thank you for using Express JS CLI!');
-});
-
-const startServer = async (): Promise<void> => {
-  try {
-    await connectToDatabase();
-    app.listen(envConfig.APP_PORT, () => {
-      logger.info(\`Server running on port \${envConfig.APP_PORT}\`);
-    });
-  } catch (error) {
-    logger.error('Failed to start server', error);
-    process.exit(1);
-  }
-};
-
-startServer();
-
+const app = configureExpress();
 export default app;
-    `;
+`;
 };
+
+export default templateCodeMainAppTS;

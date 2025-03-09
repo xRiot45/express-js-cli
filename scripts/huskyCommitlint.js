@@ -2,7 +2,7 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureHuskyAndCommitlint = async (language) => {
+const configureHuskyAndCommitlint = async (language) => {
   await runCommandWithBuilder(() => {
     if (!fs.existsSync('.git')) {
       fs.mkdirSync('.git');
@@ -62,3 +62,5 @@ const getPreCommitCommand = (language) => {
 
   return command;
 };
+
+export default configureHuskyAndCommitlint;

@@ -5,7 +5,7 @@ import { schematicDirectories } from '../constants/index.js';
 import { getTemplateGenerateResourcesJS } from '../templates/generate-resources/js/index.js';
 import { getTemplateGenerateResourcesTS } from '../templates/generate-resources/ts/index.js';
 
-export const generateFile = async (schematic, fileName, language, testing) => {
+const generateFile = async (schematic, fileName, language, testing) => {
   const toCamelCase = (str) =>
     str
       .split(/[-_ ]+/)
@@ -97,3 +97,5 @@ const generateResourceFiles = async (resourceName, language, testing) => {
     await generateFile(schematic, resourceName, language, testing);
   }
 };
+
+export default generateFile;

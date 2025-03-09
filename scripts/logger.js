@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import shell from 'shelljs';
-import { getTemplateLoggerJS } from '../templates/logger-config/js/index.js';
-import { getTemplateLoggerTS } from '../templates/logger-config/ts/index.js';
+import templateCodeLoggerJS from '../templates/configs/logger-config/js/index.js';
+import templateCodeLoggerTS from '../templates/configs/logger-config/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configureLogger = async (language) => {
+const configureLogger = async (language) => {
   await runCommandWithBuilder(() => {
     shell.exec(`npm install winston`, { silent: true });
   }, `Initializing logger`);
@@ -17,10 +17,12 @@ export const configureLogger = async (language) => {
   }
 
   const loggerConfigContent =
-    language === 'TypeScript' ? getTemplateLoggerTS() : getTemplateLoggerJS();
+    language === 'TypeScript' ? templateCodeLoggerTS() : templateCodeLoggerJS();
 
   fs.writeFileSync(
     path.join(configDir, `logger.config.${extension}`),
     loggerConfigContent,
   );
 };
+
+export default configureLogger;

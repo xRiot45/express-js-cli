@@ -2,7 +2,7 @@ import fs from 'fs';
 import shell from 'shelljs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
-export const configurePrettier = async () => {
+const configurePrettier = async () => {
   await runCommandWithBuilder(() => {
     shell.exec('npm install --save-dev prettier', { silent: true });
 
@@ -12,3 +12,5 @@ export const configurePrettier = async () => {
     );
   });
 };
+
+export default configurePrettier;
