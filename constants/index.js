@@ -52,13 +52,13 @@ const dependencies = [
   'helmet',
   'morgan',
   'express-rate-limit',
-  'bcryptjs',
   'zod',
   'cookie-parser',
   'compression',
-  'helmet',
+  'bcryptjs',
   'http-errors',
   'xss-clean',
+  'csrf',
 ];
 
 const devDependencies = [

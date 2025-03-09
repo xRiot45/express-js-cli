@@ -26,6 +26,7 @@ import { configureProjectDirectories } from '../scripts/projectDirectories.js';
 import { configureTesting } from '../scripts/testing.js';
 import centerText from '../utils/centerText.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
+import { configureMiddlewares } from '../scripts/middlewares.js';
 
 const program = new Command();
 const packageJson = JSON.parse(
@@ -141,6 +142,7 @@ const createProject = async (projectName) => {
     await configureDatabase(details.database, details.language);
     await configureLogger(details.language);
     await configureTesting(details.language, details.testing);
+    await configureMiddlewares(details.language);
 
     if (details.usePrettier) {
       await configurePrettier();
