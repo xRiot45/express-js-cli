@@ -60,6 +60,12 @@ const askProjectDetails = async (projectName) => {
       },
       {
         type: 'confirm',
+        name: 'useImportAlias',
+        message: 'Use import alias for modules? (`@/*` by default)?',
+        default: true,
+      },
+      {
+        type: 'confirm',
         name: 'usePrettier',
         message: 'Use Prettier for code formatting? (recommended)',
         default: true,
@@ -139,7 +145,7 @@ const createProject = async (projectName) => {
     await configureProjectDirectories(details.language);
     await configureEnvironment(details.database, projectName, details.language);
     await configureGitIgnore();
-    await configureLanguage(details.language);
+    await configureLanguage(details.language, details.useImportAlias);
     await configureDatabase(details.database, details.language);
     await configureLogger(details.language);
     await configureTesting(details.language, details.testing);

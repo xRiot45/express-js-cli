@@ -12,7 +12,6 @@ import {
   templateCodeCorsMiddlewareTS,
   templateCodeCsrfMiddlewareTS,
   templateCodeRateLimiterMiddlewareTS,
-  templateCodeXssMiddlewareTS,
 } from '../templates/middlewares/security/ts/index.js';
 
 // Other Middleware
@@ -35,7 +34,6 @@ const middlewareTemplates = {
     error: templateCodeErrorMiddlewareTS,
     morgan: templateCodeMorganMiddlewareTS,
     compression: templateCodeCompressionMiddlewareTS,
-    xss: templateCodeXssMiddlewareTS,
   },
   JavaScript: {
     cors: templateCodeCorsMiddlewareJS,
@@ -66,7 +64,6 @@ const configureMiddlewares = async (language) => {
       name: 'compression',
       filename: `compression.middleware.${fileExtension}`,
     },
-    { name: 'xss', filename: `xss.middleware.${fileExtension}` },
   ];
 
   const imports = [];

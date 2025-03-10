@@ -9,14 +9,12 @@ import {
   errorMiddleware,
   limiterMiddleware,
   morganMiddleware,
-  xssMiddleware
 } from '../middlewares/index.ts';
 import server from '../server.ts';
 
 const configureExpress = (): Application => {
   const app: Application = express();
 
-  app.use(xssMiddleware);
   app.use(compressionMiddleware);
   app.use(morganMiddleware);
   app.use(helmet());
