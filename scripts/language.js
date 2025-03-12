@@ -19,7 +19,7 @@ const configureLanguage = async (language, useImportAlias) => {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     await runCommandWithBuilder(
-      'npm install --save-dev typescript ts-node @types/node',
+      'npm install --save-dev typescript @types/node',
     );
     await runCommandWithBuilder('npx tsc --init');
 
@@ -53,6 +53,7 @@ const configureLanguage = async (language, useImportAlias) => {
         '@services/*': ['./services/*'],
         '@types/*': ['./types/*'],
         '@utils/*': ['./utils/*'],
+        '@enums/*': ['./enums/*'],
       };
     }
 
@@ -78,6 +79,7 @@ const configureLanguage = async (language, useImportAlias) => {
         '#services/*': './src/services/*',
         '#utils/*': './src/utils/*',
         '#validations/*': './src/validations/*',
+        '#enums/*': './src/enums/*',
       };
     }
 

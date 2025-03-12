@@ -61,7 +61,8 @@ const askProjectDetails = async (projectName) => {
       {
         type: 'confirm',
         name: 'useImportAlias',
-        message: 'Use import alias for modules? (`@/*` by default)?',
+        message:
+          'Use import alias for modules? (`@* (For TypeScript) and #* (For JavaScript) ` by default)?',
         default: true,
       },
       {
