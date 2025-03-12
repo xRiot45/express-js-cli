@@ -12,6 +12,7 @@ const schematics = {
   config: 'Generate a new config file',
   middleware: 'Generate a new middleware file',
   util: 'Generate a new util file',
+  enum: 'Generate a new enum file',
   test: 'Generate a new test file',
 };
 
@@ -28,6 +29,7 @@ const schematicDirectories = {
   resources: 'resources',
   middleware: 'middlewares',
   util: 'utils',
+  enum: 'enums',
   test: 'test',
 };
 

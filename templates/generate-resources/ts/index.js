@@ -1,4 +1,5 @@
 import templateCodeController from './partials/template-controller.js';
+import templateCodeEnum from './partials/template-enum.js';
 import templateCodeInterface from './partials/template-interface.js';
 import templateCodeMiddleware from './partials/template-middleware.js';
 import templateCodeModel from './partials/template-model.js';
@@ -31,6 +32,8 @@ const templateCodeGenerateResourcesTS = (schematic, resourceName, testing) => {
       return templateCodeMiddleware(modelName);
     case 'util':
       return templateCodeUtil(modelName);
+    case 'enum':
+      return templateCodeEnum(modelName);
     case 'test':
       return testing === 'Jest'
         ? templateCodeJest(modelName)

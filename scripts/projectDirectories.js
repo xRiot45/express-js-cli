@@ -16,6 +16,7 @@ const configureProjectDirectories = async (language) => {
     'configs',
     'middlewares',
     'utils',
+    'enums',
     'validations',
   ]);
 
