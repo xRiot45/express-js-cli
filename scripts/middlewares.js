@@ -4,13 +4,11 @@ import path from 'path';
 // Security Middleware
 import {
   templateCodeCorsMiddlewareJS,
-  templateCodeCsrfMiddlewareJS,
   templateCodeRateLimiterMiddlewareJS,
   templateCodeXssMiddlewareJS,
 } from '../templates/middlewares/security/js/index.js';
 import {
   templateCodeCorsMiddlewareTS,
-  templateCodeCsrfMiddlewareTS,
   templateCodeRateLimiterMiddlewareTS,
 } from '../templates/middlewares/security/ts/index.js';
 
@@ -29,7 +27,6 @@ import {
 const middlewareTemplates = {
   TypeScript: {
     cors: templateCodeCorsMiddlewareTS,
-    csrf: templateCodeCsrfMiddlewareTS,
     limiter: templateCodeRateLimiterMiddlewareTS,
     error: templateCodeErrorMiddlewareTS,
     morgan: templateCodeMorganMiddlewareTS,
@@ -37,7 +34,6 @@ const middlewareTemplates = {
   },
   JavaScript: {
     cors: templateCodeCorsMiddlewareJS,
-    csrf: templateCodeCsrfMiddlewareJS,
     limiter: templateCodeRateLimiterMiddlewareJS,
     error: templateCodeErrorMiddlewareJS,
     morgan: templateCodeMorganMiddlewareJS,
@@ -56,7 +52,6 @@ const configureMiddlewares = async (language) => {
 
   const middlewares = [
     { name: 'cors', filename: `cors.middleware.${fileExtension}` },
-    { name: 'csrf', filename: `csrf.middleware.${fileExtension}` },
     { name: 'limiter', filename: `limiter.middleware.${fileExtension}` },
     { name: 'error', filename: `error.middleware.${fileExtension}` },
     { name: 'morgan', filename: `morgan.middleware.${fileExtension}` },
