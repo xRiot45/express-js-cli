@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Features
 
 - **Enum Generation:** Added support for generating enum file.
-- **Import Alias Options:** Users can now choose between `@*` for TypeScript and `#*` for JavaScript when importing modules.
+- **Import Alias Options:** Users can choose whether to use import alias or not to use import alias.
 
 ### 🔧 Enhancements
 
