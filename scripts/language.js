@@ -43,16 +43,16 @@ const configureLanguage = async (language, useImportAlias) => {
     if (useImportAlias) {
       customTsConfig.compilerOptions.baseUrl = './src';
       customTsConfig.compilerOptions.paths = {
-        '@/configs/*': ['./configs/*'],
-        '@/controllers/*': ['./controllers/*'],
-        '@/interfaces/*': ['./interfaces/*'],
-        '@/middlewares/*': ['./middlewares/*'],
-        '@/models/*': ['./models/*'],
-        '@/repositories/*': ['./repositories/*'],
-        '@/routes/*': ['./routes/*'],
-        '@/services/*': ['./services/*'],
-        '@/types/*': ['./types/*'],
-        '@/utils/*': ['./utils/*'],
+        '@configs/*': ['./configs/*'],
+        '@controllers/*': ['./controllers/*'],
+        '@interfaces/*': ['./interfaces/*'],
+        '@middlewares/*': ['./middlewares/*'],
+        '@models/*': ['./models/*'],
+        '@repositories/*': ['./repositories/*'],
+        '@routes/*': ['./routes/*'],
+        '@services/*': ['./services/*'],
+        '@types/*': ['./types/*'],
+        '@utils/*': ['./utils/*'],
       };
     }
 
