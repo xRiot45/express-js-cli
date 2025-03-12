@@ -1,4 +1,4 @@
-export const getTemplateEslintTS = () => {
+const templateCodeEslintTS = () => {
   return `
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintPluginComments from 'eslint-plugin-eslint-comments';
@@ -42,3 +42,5 @@ export default [
 ];
 `;
 };
+
+export default templateCodeEslintTS;

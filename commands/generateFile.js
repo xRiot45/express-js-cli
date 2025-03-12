@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import { schematicDirectories } from '../constants/index.js';
-import { getTemplateGenerateResourcesJS } from '../templates/generate-resources/js/index.js';
-import { getTemplateGenerateResourcesTS } from '../templates/generate-resources/ts/index.js';
+import templateCodeGenerateResourcesJS from '../templates/generate-resources/js/index.js';
+import templateCodeGenerateResourcesTS from '../templates/generate-resources/ts/index.js';
 
 const generateFile = async (schematic, fileName, language, testing) => {
   const toCamelCase = (str) =>
@@ -68,8 +68,8 @@ const generateFile = async (schematic, fileName, language, testing) => {
 
   const fileTemplate =
     language === 'TypeScript'
-      ? getTemplateGenerateResourcesTS(schematic, camelCaseName, testing)
-      : getTemplateGenerateResourcesJS(schematic, camelCaseName, testing);
+      ? templateCodeGenerateResourcesTS(schematic, camelCaseName, testing)
+      : templateCodeGenerateResourcesJS(schematic, camelCaseName, testing);
 
   fs.writeFileSync(filePath, fileTemplate.trim());
   process.stdout.write(

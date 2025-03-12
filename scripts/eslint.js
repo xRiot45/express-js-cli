@@ -1,7 +1,7 @@
 import fs from 'fs';
 import shell from 'shelljs';
-import { getTemplateEslintJS } from '../templates/eslint/js/index.js';
-import { getTemplateEslintTS } from '../templates/eslint/ts/index.js';
+import templateCodeEslintJS from '../templates/eslint/js/index.js';
+import templateCodeEslintTS from '../templates/eslint/ts/index.js';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
 
 const configureEslint = async (language) => {
@@ -34,8 +34,8 @@ const configureEslint = async (language) => {
     if (!fs.existsSync(configPath)) {
       const configContent =
         language === 'TypeScript'
-          ? getTemplateEslintTS()
-          : getTemplateEslintJS();
+          ? templateCodeEslintTS()
+          : templateCodeEslintJS();
 
       fs.writeFileSync(configPath, configContent, 'utf8');
     }

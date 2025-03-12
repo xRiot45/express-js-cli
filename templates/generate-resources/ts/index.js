@@ -10,11 +10,7 @@ import templateCodeMocha from './partials/template-test/template-mocha.js';
 import templateCodeUtil from './partials/template-util.js';
 import templateCodeValidation from './partials/template-validation.js';
 
-export const getTemplateGenerateResourcesTS = (
-  schematic,
-  resourceName,
-  testing,
-) => {
+const templateCodeGenerateResourcesTS = (schematic, resourceName, testing) => {
   const modelName = resourceName.toLowerCase();
   switch (schematic) {
     case 'service':
@@ -45,3 +41,5 @@ export const getTemplateGenerateResourcesTS = (
       return '';
   }
 };
+
+export default templateCodeGenerateResourcesTS;

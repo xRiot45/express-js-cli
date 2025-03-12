@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { runCommandWithBuilder } from '../utils/runCommandWithBuilder.js';
-import { getTemplateGitIgnore } from '../templates/gitignore/index.js';
+import templateCodeGitIgnore from '../templates/gitignore/index.js';
 
 const configureGitIgnore = async () => {
   await runCommandWithBuilder(() => {
@@ -9,8 +9,8 @@ const configureGitIgnore = async () => {
       ? fs.readFileSync(gitignore, 'utf8')
       : '';
 
-    const ignoreRules = getTemplateGitIgnore();
-    const newRules = ignoreRules.trimEnd().replace(/\n+$/, '');
+    const ignoreRulesContent = templateCodeGitIgnore();
+    const newRules = ignoreRulesContent.trimEnd().replace(/\n+$/, '');
     const newIgnoreRules =
       newRules === existingIgnoreRules
         ? existingIgnoreRules

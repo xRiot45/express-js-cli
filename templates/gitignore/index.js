@@ -1,4 +1,4 @@
-export const getTemplateGitIgnore = () => {
+const templateCodeGitIgnore = () => {
   return `
 # compiled output
 /dist
@@ -55,3 +55,5 @@ pids
 *.pid.lock
     `;
 };
+
+export default templateCodeGitIgnore;

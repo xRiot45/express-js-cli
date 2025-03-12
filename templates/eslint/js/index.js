@@ -1,4 +1,4 @@
-export const getTemplateEslintJS = () => {
+const templateCodeEslintJS = () => {
   return `
 import globals from 'globals';
 import js from '@eslint/js';
@@ -38,3 +38,5 @@ export default [
 ];    
 `;
 };
+
+export default templateCodeEslintJS;
