@@ -108,8 +108,8 @@ Here are some things you can contribute:
 - [ ] Support for integration with MongoDB
 - [ ] Added option for choose ORM (Object Relational Mapping)
 - [ ] Improved documentation
-- [ ] Added option for import type
-- [ ] Added middleware for security RESTful API
+- [x] Added option for import type
+- [x] Added middleware CORS, Compression, Error, Rate Limiter and Morgan
 - [ ] Refactoring Express JS CLI code
 
 ---
