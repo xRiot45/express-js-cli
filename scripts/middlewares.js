@@ -5,7 +5,6 @@ import path from 'path';
 import {
   templateCodeCorsMiddlewareJS,
   templateCodeRateLimiterMiddlewareJS,
-  templateCodeXssMiddlewareJS,
 } from '../templates/middlewares/security/js/index.js';
 import {
   templateCodeCorsMiddlewareTS,
@@ -38,7 +37,6 @@ const middlewareTemplates = {
     error: templateCodeErrorMiddlewareJS,
     morgan: templateCodeMorganMiddlewareJS,
     compression: templateCodeCompressionMiddlewareJS,
-    xss: templateCodeXssMiddlewareJS,
   },
 };
 

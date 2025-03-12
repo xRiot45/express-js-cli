@@ -59,8 +59,6 @@ const dependencies = [
   'compression',
   'bcryptjs',
   'http-errors',
-  'xss-clean',
-  'csrf',
 ];
 
 const devDependencies = [
