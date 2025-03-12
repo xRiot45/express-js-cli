@@ -77,6 +77,8 @@ This tool is perfect for beginners who want to start projects quickly as well as
 
 ✅ **Testing Support** : Choose between Jest & Supertest or Mocha & Chai Framework Testing
 
+✅ **Import Alias Support** : Choose between importing aliases or not using import aliases
+
 <br />
 
 ## 🤸 Quick Start
@@ -108,6 +110,7 @@ $ express new <project-name>
 - **Select language** : JavaScript / TypeScript
 - **Select database** : MySQL / PostgreSQL
 - **Select testing** : Jest / Mocha
+- **Use import alias for modules? (`@* (For TypeScript) and #* (For JavaScript) ` by default)?** : (Y/n)
 - **Use Eslint for code linting?** : Y / n
 - **Use Husky and Commit lint for commit linting?** : Y / n
 - **Initialize Git repository?** : Y / n
@@ -179,6 +182,7 @@ Schematics:
   config       Generate a new config file
   middleware   Generate a new middleware file
   util         Generate a new util file
+  enum         Generate a new enum file
   test         Generate a new test file
 ```
 
@@ -576,6 +580,23 @@ const testUtil = (): void => {
 };
 
 export default testUtil;
+```
+
+**Code Enum**
+
+- JavaScript
+
+```javascript
+export const testEnum = Object.freeze({
+  // Implement your enum here
+});
+```
+
+- TypeScript
+
+```typescript
+export enum testEnum {}
+// Implement your enum here
 ```
 
 **Code Interface (Only using TypeScript)**

@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v2.0.0] - 2025-03-12
+
+### 🚀 Release Highlights
+
+- This major update introduces new features, improved project structure, and additional documentation to enhance usability and maintainability.
+
+### ✨ Features
+
+- **Enum Generation:** Added support for generating enum file.
+- **Import Alias Options:** Users can now choose between `@*` for TypeScript and `#*` for JavaScript when importing modules.
+
+### 🔧 Enhancements
+
+- **Middleware Templates:** Added built-in templates for commonly used middleware:
+  - Compression Middleware
+  - Error Handling Middleware
+  - Morgan (Logging) Middleware
+  - CORS Middleware
+  - Rate Limiter Middleware
+- **Express Configuration:** All express configurations are now in the `express.config.js/ts` file in the `configs` folder, no longer storing all configurations in `app.js/ts`.
+- **Server Separation:** The server setup is now in a separate file rather than being defined in `app.js/ts`.
+
+### 📚 Documentation
+
+- **Code of Conduct:** Added `CODE_OF_CONDUCT.md` to establish community guidelines.
+- **Contribution Guide:** Added `CONTRIBUTING.md` to help contributors understand the workflow and best practices.
+
+### 📝 Licensing
+
+- Changed project license from ISC to MIT for better compatibility and openness.
+
+---
+
 ## [v1.2.5] - 2025-03-07
 
 ### 🚀 Release Highlights
